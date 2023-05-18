@@ -40,32 +40,16 @@ pub mod print {
     }
 
     ///  Generate information about the host/address/IP that will be scanned, to be shown on two lines along with the application name
-    fn get_host_ip(cli_args: &CliArgs, ip: &IpAddr) -> (String, String) {
+    fn get_host_ip(cli_args: &CliArgs, ip: &IpAddr) -> (String, String, String) {
         let ports = if cli_args.ports.min == cli_args.ports.max {
             format!("{}", cli_args.ports.min)
         } else {
             format!("{}-{}", cli_args.ports.min, cli_args.ports.max)
         };
         if cli_args.address == ip.to_string() {
-            (
-                format!(
-                    "{t}:{y}{ports}{r}",
-                    y = Color::Yellow,
-                    r = Color::Reset,
-                    t = cli_args.address,
-                ),
-                String::new(),
-            )
+            (format!("{}:", cli_args.address), ports, String::new())
         } else {
-            (
-                format!(
-                    "{t}:{y}{ports}{r}",
-                    y = Color::Yellow,
-                    r = Color::Reset,
-                    t = ip,
-                ),
-                cli_args.address.to_string(),
-            )
+            (format!("{ip}:"), ports, cli_args.address.to_string())
         }
     }
 
@@ -122,13 +106,18 @@ pub mod print {
 
     /// Print the name of the application, using a small figlet font
     pub fn name_and_target(cli_args: &CliArgs, ip: &IpAddr) {
-        let (ip, address) = get_host_ip(cli_args, ip);
-        let bar = (0..=address.chars().count().max(ip.chars().count()) + 19)
+        let (ip, ports, address) = get_host_ip(cli_args, ip);
+        let bar = (0..=address
+            .chars()
+            .count()
+            .max(ip.chars().count() + ports.chars().count())
+            + 19)
             .map(|_| '═')
             .collect::<String>();
         println!(
-            "{m}{bar}\n|__|  /\\  \\  / |\\ |{r} {ip}\n{m}|  | /--\\  \\/  | \\|{r} {address}\n{m}{bar}{r}",
+            "{m}{bar}\n|__|  /\\  \\  / |\\ |{r} {ip}{y}{ports}{r}\n{m}|  | /--\\  \\/  | \\|{r} {address}\n{m}{bar}{r}",
             m = Color::Magenta,
+			y = Color::Yellow,
             r = Color::Reset,
         );
     }
@@ -211,27 +200,21 @@ pub mod print {
             let ip = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
             assert_eq!(
                 get_host_ip(&cli_args, &ip),
-                ("127.0.0.1:\u{1b}[33m1\u{1b}[0m".to_owned(), String::new())
+                ("127.0.0.1:".into(), "1".into(), String::new())
             );
 
             let cli_args = parse_arg::CliArgs::test_new("1-10000".to_owned(), 512, None);
             let ip = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
             assert_eq!(
                 get_host_ip(&cli_args, &ip),
-                (
-                    "127.0.0.1:\u{1b}[33m1-10000\u{1b}[0m".to_owned(),
-                    String::new()
-                )
+                ("127.0.0.1:".into(), "1-10000".into(), String::new())
             );
 
             let cli_args = parse_arg::CliArgs::test_new("1-65535".to_owned(), 512, None);
             let ip = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
             assert_eq!(
                 get_host_ip(&cli_args, &ip),
-                (
-                    "127.0.0.1:\u{1b}[33m1-65535\u{1b}[0m".to_owned(),
-                    String::new()
-                )
+                ("127.0.0.1:".into(), "1-65535".into(), String::new())
             );
 
             let cli_args =
@@ -240,7 +223,8 @@ pub mod print {
             assert_eq!(
                 get_host_ip(&cli_args, &ip),
                 (
-                    "127.0.0.1:\u{1b}[33m1\u{1b}[0m".to_owned(),
+                    "127.0.0.1:".into(),
+                    "1".into(),
                     String::from("www.google.com")
                 )
             );
@@ -251,7 +235,8 @@ pub mod print {
             assert_eq!(
                 get_host_ip(&cli_args, &ip),
                 (
-                    "127.0.0.1:\u{1b}[33m1-10000\u{1b}[0m".to_owned(),
+                    "127.0.0.1:".into(),
+                    "1-10000".into(),
                     String::from("www.google.com")
                 )
             );
@@ -262,12 +247,12 @@ pub mod print {
             assert_eq!(
                 get_host_ip(&cli_args, &ip),
                 (
-                    "127.0.0.1:\u{1b}[33m1-65535\u{1b}[0m".to_owned(),
+                    "127.0.0.1:".into(),
+                    "1-65535".into(),
                     String::from("www.google.com")
                 )
             );
         }
-
         #[test]
         /// Generate extra ip function will either return None, or a String in format "Other IPs: xx"
         fn test_terminal_table() {
