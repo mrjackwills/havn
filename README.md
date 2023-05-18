@@ -5,8 +5,11 @@
 </p>
 
 <p align="center">
-	<a href="https://raw.githubusercontent.com/mrjackwills/havn/main/.github/screen.mp4" target='_blank' rel='noopener noreferrer'>
-		<img src='./.github/screen.gif' width='450px'/>
+	<a href="https://raw.githubusercontent.com/mrjackwills/havn/main/.github/screen.webp" target='_blank' rel='noopener noreferrer'>
+		<picture>
+			<source srcset="./.github/screen.webp" type="image/webp">
+			<img src="./.github/screen.gif" alt="animated screenshot" width="450px">
+		</picture>
 	</a>
 </p>
 
