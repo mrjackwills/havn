@@ -2,7 +2,8 @@
 name = "havn"
 version = "0.1.0"
 edition = "2021"
-description = "A fast configurable port scanner with sensible defaults"
+authors = ["Jack Wills <email@mrjackwills.com>"]
+description = "A fast configurable port scanner with reasonable defaults"
 repository = "https://github.com/mrjackwills/havn"
 homepage = "https://github.com/mrjackwills/havn"
 license = "MIT"
