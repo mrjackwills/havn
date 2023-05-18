@@ -33,19 +33,22 @@ with images built for `linux/amd64`, `linux/arm64`, and `linux/arm/v6`
 
 **via Docker Hub**
 ```shell
-docker run --rm -it mrjackwills/havn #[options]
+docker run --rm -it mrjackwills/havn:latest #[options]
 ```
 
 **via ghcr.io**
 
 ```shell
-docker run --rm -it ghcr.io/mrjackwills/havn #[options]
+docker run --rm -it ghcr.io/mrjackwills/havn:latest #[options]
 ```
 
 ❗Caution: To scan the Docker host itself, you must grant access by including the option:
 
 ```shell
 --network=host
+
+# For example
+docker run --rm --network=host -it ghcr.io/mrjackwills/havn:latest -a
 ```
 
 ### Pre-Built
