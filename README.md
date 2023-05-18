@@ -1,5 +1,5 @@
 <p align="center">
-	<img src='./.github/logo.svg' width='200px' />
+	<img src='./.github/logo.svg' width='125px' />
 	<h1 align="center">havn</h1>
 	<div align="center">A fast configurable port scanner with reasonable defaults</div>
 </p>
@@ -16,15 +16,6 @@ using asynchronous <a href='https://github.com/tokio-rs/tokio' target='_blank' r
 With sensible defaults and configurable options, users are able customise the scanning process according to their needs.
 It is designed and built to be compatible with multiple platforms, including Docker, and has a binary size of less than 1mb.
 
-### Todo
-
-- [ ] Scan UDP ports, currently only TCP
-- [ ] allow multiple addresses/IPs to be scanned
-- [ ] monitor response times to automatically modify request settings
-- [ ] configurable option to disable second-pass scan
-- [ ] debug option to display more verbose output
-- [ ] improve windows performance
-- [ ] publish to npm
 
 ## Download & install
 
@@ -49,6 +40,12 @@ docker run --rm -it mrjackwills/havn #[options]
 
 ```shell
 docker run --rm -it ghcr.io/mrjackwills/havn #[options]
+```
+
+❗Caution: To scan the Docker host itself, you must grant access by including the option:
+
+```shell
+--network=host
 ```
 
 ### Pre-Built
@@ -108,6 +105,24 @@ havn www.digitalocean.com -p -100 -t 1000 -6
 # default concurrent requests[1000], default timeout[2000ms], 6 retries, IPv4
 havn www.bbc.com -p 443 -r 6
 ```
+### Todo
+
+- [ ] Scan UDP ports, currently only TCP
+- [ ] allow multiple addresses/IPs to be scanned
+- [ ] monitor response times to automatically modify request settings
+- [ ] configurable option to disable second-pass scan
+- [ ] debug option to display more verbose output
+- [ ] improve windows performance
+- [ ] publish to npm
+
+
+## Tests
+
+A number of tests will open port 80, this may cause issues if the port is already open on your system
+
+```shell
+cargo test -- --test-threads=1
+```
 
 ## Build step
 
@@ -160,11 +175,3 @@ rustup target add arm-unknown-linux-musleabihf
 cargo build --target arm-unknown-linux-musleabihf --release
 ```
 **Untested on other platforms**
-
-## Tests
-
-A number of tests will open port 80, this may cause issues if the port is already open on your system
-
-```shell
-cargo test -- --test-threads=1
-```
