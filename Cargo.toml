@@ -1,6 +1,6 @@
 [package]
 name = "havn"
-version = "0.1.1"
+version = "0.1.0"
 edition = "2021"
 description = "A fast configurable port scanner with sensible defaults"
 repository = "https://github.com/mrjackwills/havn"
