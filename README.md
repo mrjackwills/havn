@@ -23,6 +23,7 @@ It is designed and built to be compatible with multiple platforms, including Doc
 - [ ] monitor response times to automatically modify request settings
 - [ ] configurable option to disable second-pass scan
 - [ ] debug option to display more verbose output
+- [ ] improve windows performance
 - [ ] publish to npm
 
 ## Download & install
