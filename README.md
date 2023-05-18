@@ -7,9 +7,8 @@
 <p align="center">
 	<a href="https://raw.githubusercontent.com/mrjackwills/havn/main/.github/screen.mp4" target='_blank' rel='noopener noreferrer'>
 		<picture>
-		<source srcset="./.github/screen.webp" type="image/webp">
-		<source srcset="./.github/screen.gif" type="image/gif">
-		<img src="./.github/screen.gif">
+			<source srcset="./.github/screen.webp" type="image/webp">
+			<img src="./.github/screen.gif" alt="animated screenshot" max-width="200px">
 		</picture>
 	</a>
 </p>
