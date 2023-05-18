@@ -6,9 +6,14 @@
 
 <p align="center">
 	<a href="https://raw.githubusercontent.com/mrjackwills/havn/main/.github/screen.mp4" target='_blank' rel='noopener noreferrer'>
-		<img src='./.github/screen.gif' width='450px'/>
+		<picture>
+		<source srcset="./.github/screen.webp" type="image/webp">
+		<source srcset="./.github/screen.gif" type="image/gif">
+		<img src="./.github/screen.gif">
+		</picture>
 	</a>
 </p>
+		<!-- <img src='./.github/screen.gif' width='450px'/> -->
 
 ## Description
 `havn` - `ˈheɪvən` || `"HAY" + "vuhn"` - is a lightweight self-contained port scanning application written in <a href='https://www.rust-lang.org/' target='_blank' rel='noopener noreferrer'>Rust</a>,
