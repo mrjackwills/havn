@@ -1,6 +1,6 @@
 
 <p align="center">
-	<img src='https://raw.githubusercontent.com/mrjackwills/havn/main/.github/logo.svg' width='100px'/>
+	<img src='https://raw.githubusercontent.com/mrjackwills/havn/main/.github/logo.svg' width='125px'/>
 	<h1 align="center">havn</h1>
 	<div align="center">
 		A fast configurable port scanner with reasonable defaults
