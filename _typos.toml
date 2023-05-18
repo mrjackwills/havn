@@ -1,0 +1,2 @@
+[files]
+extend-exclude = ["src/port_descriptions/*.txt"]

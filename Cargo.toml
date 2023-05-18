@@ -1,0 +1,28 @@
+[package]
+name = "havn"
+version = "0.1.1"
+edition = "2021"
+description = "A fast configurable port scanner with sensible defaults"
+repository = "https://github.com/mrjackwills/havn"
+homepage = "https://github.com/mrjackwills/havn"
+license = "MIT"
+readme = "README.md"
+keywords = ["docker", "havn", "port", "scan", "tokio"]
+categories = ["command-line-utilities"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+clap = { version="4.2", features = ["color", "derive", "unicode"] }
+tokio = { version = "1.28", features = ["macros", "net", "parking_lot", "rt", "rt-multi-thread", "signal", "sync", "time"] }
+
+[dev-dependencies]
+warp="0.3"
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = 'abort'
+strip=true
+debug = false
+opt-level = "z"

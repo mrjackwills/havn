@@ -1,0 +1,3 @@
+*.sh eol=lf
+*.md eol=CRLF
+*.txt eol=lf
