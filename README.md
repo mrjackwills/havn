@@ -46,9 +46,6 @@ docker run --rm -it ghcr.io/mrjackwills/havn:latest #[options]
 
 ```shell
 --network=host
-
-# For example
-docker run --rm --network=host -it ghcr.io/mrjackwills/havn:latest -a
 ```
 
 ### Pre-Built
