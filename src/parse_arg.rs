@@ -12,7 +12,7 @@ pub struct Cli {
     #[clap(default_value = "127.0.0.1")]
     address: String,
 
-    /// Scan all ports. This option conflicts with "-p".
+    /// Scan all ports, conflicts with "-p".
     #[clap(short = 'a', default_value_t = false, conflicts_with = "ports")]
     all_ports: bool,
 
@@ -20,7 +20,7 @@ pub struct Cli {
     #[clap(short = 'c', value_name = "concurrent", default_value_t = 1000)]
     concurrent: u16,
 
-    /// Specify the range of ports to scan. Accepts a range, or single port.
+    /// Ports to scan, accepts a range, or single port, conflicts with "-p".
     #[clap(
         short = 'p',
         value_name = "ports",
