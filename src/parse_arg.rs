@@ -159,124 +159,34 @@ impl CliArgs {
 mod tests {
     use super::{Cli, PortRange};
 
+	/// Re-useable test to make sure ports get parsed correctly
+    fn test(ports: &str, min: u16, max: u16, range: u16) {
+        let result = PortRange::from(&Cli {
+            address: "127.0.0.1".to_owned(),
+            all_ports: false,
+            concurrent: 1024,
+            ports: ports.to_owned(),
+            retry: 1,
+            timeout: 1000,
+            ip_v6: false,
+        });
+        assert_eq!(result.min, min);
+        assert_eq!(result.max, max);
+        assert_eq!(result.range_size, range);
+		assert_eq!(result.get_range(), (min..=max))
+    }
+
     #[test]
+	/// Test that ports are parsed correctly, everything else should be handled by Clap directly
     fn test_cli_port_range() {
-        let result = PortRange::from(&Cli {
-            address: "127.0.0.1".to_owned(),
-            all_ports: false,
-            concurrent: 1024,
-            ports: "1-1000".to_owned(),
-            retry: 1,
-            timeout: 1000,
-            ip_v6: false,
-        });
-        assert_eq!(result.min, 1);
-        assert_eq!(result.max, 1000);
-        assert_eq!(result.range_size, 1000);
-
-        let result = PortRange::from(&Cli {
-            address: "127.0.0.1".to_owned(),
-            all_ports: false,
-            concurrent: 1024,
-            ports: "-1000".to_owned(),
-            retry: 1,
-            timeout: 1000,
-            ip_v6: false,
-        });
-        assert_eq!(result.min, 1);
-        assert_eq!(result.max, 1000);
-        assert_eq!(result.range_size, 1000);
-
-        let result = PortRange::from(&Cli {
-            address: "127.0.0.1".to_owned(),
-            all_ports: false,
-            concurrent: 1024,
-            ports: "1000-1".to_owned(),
-            retry: 1,
-            timeout: 1000,
-            ip_v6: false,
-        });
-        assert_eq!(result.min, 1);
-        assert_eq!(result.max, 1000);
-        assert_eq!(result.range_size, 1000);
-
-        let result = PortRange::from(&Cli {
-            address: "127.0.0.1".to_owned(),
-            all_ports: false,
-            concurrent: 1024,
-            ports: "100-200".to_owned(),
-            retry: 1,
-            timeout: 100,
-            ip_v6: false,
-        });
-        assert_eq!(result.min, 100);
-        assert_eq!(result.max, 200);
-        assert_eq!(result.range_size, 101);
-
-        let result = PortRange::from(&Cli {
-            address: "127.0.0.1".to_owned(),
-            all_ports: false,
-            concurrent: 1024,
-            ports: "100-".to_owned(),
-            retry: 1,
-            timeout: 100,
-            ip_v6: false,
-        });
-        assert_eq!(result.min, 100);
-        assert_eq!(result.max, 1000);
-        assert_eq!(result.range_size, 901);
-
-        let result = PortRange::from(&Cli {
-            address: "127.0.0.1".to_owned(),
-            all_ports: false,
-            concurrent: 1024,
-            ports: "80".to_owned(),
-            retry: 1,
-            timeout: 1000,
-            ip_v6: false,
-        });
-        assert_eq!(result.min, 80);
-        assert_eq!(result.max, 80);
-        assert_eq!(result.range_size, 1);
-
-        let result = PortRange::from(&Cli {
-            address: "127.0.0.1".to_owned(),
-            all_ports: false,
-            concurrent: 1024,
-            ports: "1-1000000".to_owned(),
-            retry: 1,
-            timeout: 1000,
-            ip_v6: false,
-        });
-        assert_eq!(result.min, 1);
-        assert_eq!(result.max, 1000);
-        assert_eq!(result.range_size, 1000);
-
-        let result = PortRange::from(&Cli {
-            address: "127.0.0.1".to_owned(),
-            all_ports: false,
-            concurrent: 1024,
-            ports: "65536-1000000".to_owned(),
-            retry: 1,
-            timeout: 1000,
-            ip_v6: false,
-        });
-        assert_eq!(result.min, 1);
-        assert_eq!(result.max, 1000);
-        assert_eq!(result.range_size, 1000);
-
-        let result = PortRange::from(&Cli {
-            address: "127.0.0.1".to_owned(),
-            all_ports: false,
-            concurrent: 1024,
-            ports: "random".to_owned(),
-            retry: 100,
-            timeout: 1000,
-            ip_v6: false,
-        });
-        assert_eq!(result.min, 1);
-        assert_eq!(result.max, 1000);
-        assert_eq!(result.range_size, 1000);
+        test("1-1000", 1, 1000, 1000);
+        test("1000-1", 1, 1000, 1000);
+        test("100-200", 100, 200, 101);
+        test("100-", 100, 1000, 901);
+        test("80", 80, 80, 1);
+        test("1-1000000", 1, 1000, 1000);
+        test("65536-1000000", 1, 1000, 1000);
+        test("random", 1, 1000, 1000);
 
         let result = PortRange::from(&Cli {
             address: "127.0.0.1".to_owned(),
