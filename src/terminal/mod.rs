@@ -114,12 +114,7 @@ pub mod print {
             + 19)
             .map(|_| '═')
             .collect::<String>();
-        println!(
-            "{m}{bar}\n|__|  /\\  \\  / |\\ |{r} {ip}{y}{ports}{r}\n{m}|  | /--\\  \\/  | \\|{r} {address}\n{m}{bar}{r}",
-            m = Color::Magenta,
-			y = Color::Yellow,
-            r = Color::Reset,
-        );
+        println!("{m}{bar}\n|__|  /\\  \\  / |\\ |{r} {ip}{y}{ports}{r}\n{m}|  | /--\\  \\/  | \\|{r} {address}\n{m}{bar}{r}", m = Color::Magenta, y = Color::Yellow, r = Color::Reset);
     }
 
     /// If any open ports found, print the results into a table
