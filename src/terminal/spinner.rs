@@ -1,61 +1,9 @@
 use std::{
-    fmt,
     io::Write,
     sync::{atomic::AtomicBool, Arc},
 };
 
 use crate::terminal::color::Color;
-
-/// State for the loading animation
-#[derive(Debug, Default, Clone, Copy)]
-pub enum Animation {
-    #[default]
-    One,
-    Two,
-    Three,
-    Four,
-    Five,
-    Six,
-    Seven,
-    Eight,
-    Nine,
-    Ten,
-}
-
-impl Animation {
-    fn next(&mut self) {
-        *self = match self {
-            Self::One => Self::Two,
-            Self::Two => Self::Three,
-            Self::Three => Self::Four,
-            Self::Four => Self::Five,
-            Self::Five => Self::Six,
-            Self::Six => Self::Seven,
-            Self::Seven => Self::Eight,
-            Self::Eight => Self::Nine,
-            Self::Nine => Self::Ten,
-            Self::Ten => Self::One,
-        }
-    }
-}
-
-impl fmt::Display for Animation {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let disp = match self {
-            Self::One => '⠋',
-            Self::Two => '⠙',
-            Self::Three => '⠹',
-            Self::Four => '⠸',
-            Self::Five => '⠼',
-            Self::Six => '⠴',
-            Self::Seven => '⠦',
-            Self::Eight => '⠧',
-            Self::Nine => '⠇',
-            Self::Ten => '⠏',
-        };
-        write!(f, "{}{disp}{}", Color::Red, Color::Reset)
-    }
-}
 
 #[derive(Debug, Default)]
 pub struct Spinner(Arc<AtomicBool>);
@@ -75,15 +23,16 @@ impl Spinner {
         std.flush().ok();
     }
 
-    /// Animate the loading icon until run is false
+    /// Animate the loading icon until `run` is false
     async fn spin(run: Arc<AtomicBool>) {
-        let mut frame = Animation::default();
+        let frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
         while run.load(std::sync::atomic::Ordering::SeqCst) {
-            print!("{frame} scanning ");
-            std::io::stdout().flush().ok();
-            print!("\r");
-            frame.next();
-            tokio::time::sleep(std::time::Duration::from_millis(75)).await;
+            for i in frames {
+                print!("{c}{i}{r} scanning ", c = Color::Red, r = Color::Reset);
+                std::io::stdout().flush().ok();
+                print!("\r");
+                tokio::time::sleep(std::time::Duration::from_millis(75)).await;
+            }
         }
     }
 
@@ -96,6 +45,7 @@ impl Spinner {
         spinner
     }
 
+    /// Stop the spinner, and re-show the cursor
     pub fn stop(&self) {
         self.0.store(false, std::sync::atomic::Ordering::SeqCst);
         Self::show_cursor();
