@@ -8,8 +8,8 @@
 </p>
 
 <p align="center">
-	<a href="https://raw.githubusercontent.com/mrjackwills/havn/main/.github/screen.gif" target='_blank' rel='noopener noreferrer'>
-		<img src='https://raw.githubusercontent.com/mrjackwills/havn/main/.github/screen.gif' width='450px'/>
+	<a href="https://raw.githubusercontent.com/mrjackwills/havn/main/.github/screen.webp" target='_blank' rel='noopener noreferrer'>
+		<img src='https://raw.githubusercontent.com/mrjackwills/havn/main/.github/screen.webp' width='450px'/>
 	</a>
 </p>
 
