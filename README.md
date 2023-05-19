@@ -76,11 +76,11 @@ Available command line arguments
 | argument|result|
 |--|--|
 | ```[string]```			| The address or IP to scan. [default: `127.0.0.1`] |
-|```-a```					| Scan every port, from `1` to `65535` |
+|```-a```					| Scan every port, from `1` to `65535`, conflicts with `-p` |
 |```-c [number]```			| How many concurrent request should be made. [default: `1000`] |
-|```-p [number / string] ```| Inclusive port range to scan, accepts either a range: `-300`, `101-200`, or a single port `80`. [default: `-1000`] |
-|```-r [number] ```			| Retry attempts per port. [default: `1`] |
-|```-t [number] ```			| Timeout for each request in milliseconds. [default: `2000`] |
+|```-p [number / string]```| Inclusive port range to scan, accepts either a range: `-300`, `101-200`, or a single port `80`, conflicts with `-a` [default: `-1000`] |
+|```-r [number]```			| Retry attempts per port. [default: `1`] |
+|```-t [number]```			| Timeout for each request in milliseconds. [default: `2000`] |
 |```-6```					| Scan the IPv6 address instead of IPv4, [default: `false`] |
 
 ### Examples
