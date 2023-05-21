@@ -83,7 +83,7 @@ impl AllPortStatus {
         }
     }
 
-    /// Scan the given port, will be recursive if retry > 0
+    /// Scan the given port, will be recursive if counter > 1
     fn scan_port(
         port: u16,
         ip: IpAddr,
@@ -295,7 +295,7 @@ mod tests {
         let result = result.unwrap();
 
         assert_eq!(result.len(), 2);
-        // First element is port 80, as has been pre-sorted
+        // First element is 443, as has been pre-sorted
         assert_eq!(result[0], (443, "https"));
         assert_eq!(result[1], (6379, "redis"));
     }

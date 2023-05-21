@@ -52,7 +52,7 @@ RUN cp /usr/src/havn/target/$(cat /.platform)/release/havn /
 FROM scratch AS RUNTIME
 
 # Set an ENV that we're running in a container
-ENV havn_RUNTIME=container
+ENV HAVN_RUNTIME=container
 
 # Copy application binary from builder image
 COPY --from=BUILDER /havn /app/

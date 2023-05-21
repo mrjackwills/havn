@@ -9,19 +9,18 @@ pub struct PortDescriptions {
 
 impl PortDescriptions {
     /// Generate the HashMap based on the "tcp.txt" file
-    /// Only gets generated if open ports > 0
     pub fn new() -> Self {
         let txt = include_str!("tcp.txt");
         let txt_len = txt.lines().count();
-        let mut port_details = HashMap::with_capacity(txt_len);
+        let mut tcp = HashMap::with_capacity(txt_len);
 
         for line in txt.lines() {
             let (name, port) = line.split_once(',').unwrap_or_default();
             if let Ok(port) = port.parse::<u16>() {
-                port_details.insert(port, name);
+                tcp.insert(port, name);
             }
         }
-        Self { tcp: port_details }
+        Self { tcp }
     }
 
     /// Get the description of a given port, with always return a &str, "unknown" for items with no descriptions

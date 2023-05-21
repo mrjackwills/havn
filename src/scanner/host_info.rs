@@ -10,6 +10,7 @@ pub struct HostInfo {
 
 impl HostInfo {
     /// Try to convert a given address into a vec of IP addresses
+    /// Only return self if address valid and Vec is not empty
     pub async fn try_from(address: &str) -> Result<Self, ()> {
         let now = std::time::Instant::now();
         (tokio::time::timeout(
@@ -36,7 +37,7 @@ impl HostInfo {
             })
     }
 
-    // Get the first IP,  either ipv4 or ipv6 depending on the cli_args
+    /// Get the first IP,  either ipv4 or ipv6 depending on the cli_args
     pub fn get_ip(&self, cli_args: &CliArgs) -> Option<&IpAddr> {
         self.ips.iter().find(|x| {
             if cli_args.ip6 {
@@ -47,7 +48,7 @@ impl HostInfo {
         })
     }
 
-    /// get all the IPs into an iter
+    /// Get all the IPs into an iter
     pub fn iter_ip(&self) -> Iter<IpAddr> {
         self.ips.iter()
     }
