@@ -182,7 +182,6 @@ cargo_clean() {
 cargo_build () {
 	cargo install cross
 	cargo_clean
-
 	echo -e "${YELLOW}cross build --target x86_64-unknown-linux-musl --release${RESET}"
 	cross build --target x86_64-unknown-linux-musl --release
 	ask_continue
