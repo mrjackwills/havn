@@ -172,22 +172,33 @@ cargo_test () {
 	ask_continue
 }
 
+
+cargo_clean() {
+	echo -e "${YELLOW}cargo clean${RESET}"
+	cargo clean
+}
 # Build all releases that GitHub workflow would
 # This will download GB's of docker images
 cargo_build () {
 	cargo install cross
+	cargo_clean
+
 	echo -e "${YELLOW}cross build --target x86_64-unknown-linux-musl --release${RESET}"
 	cross build --target x86_64-unknown-linux-musl --release
 	ask_continue
+	cargo_clean
 	echo -e "${YELLOW}cross build --target arm-unknown-linux-musleabihf --release${RESET}"
 	cross build --target arm-unknown-linux-musleabihf --release
 	ask_continue
+	cargo_clean
 	echo -e "${YELLOW}cross build --target aarch64-unknown-linux-musl --release${RESET}"
 	cross build --target aarch64-unknown-linux-musl --release
 	ask_continue
+	cargo_clean
 	echo -e "${YELLOW}cross build --target x86_64-pc-windows-gnu --release${RESET}"
 	cross build --target x86_64-pc-windows-gnu --release
 	ask_continue
+	cargo_clean
 }
 
 # $1 text to colourise
