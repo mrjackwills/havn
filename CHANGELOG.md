@@ -1,10 +1,10 @@
 ### Chores
-+ dependencies update, [a17b140c4cab583b9471f271a429a98f981fba2c]
++ dependencies updated, [a17b140c4cab583b9471f271a429a98f981fba2c]
 
 ### Docs
 + README.md tweaked, [094b5ff5b3698ba8210bfcb47e11eb70e3613937], [bad851fd32f21a18c46dfc88ec00698f9ee61607]
 + readme webp added, [df35213d5f44ed14e79e3ad3ecbd54a3e94d3740]
-+ comment impoveds, [bd20742199411511f98383cc63d77e6ac742183b]
++ comment improved, [bd20742199411511f98383cc63d77e6ac742183b]
 
 ### Fixes
 + cli_arg descriptions improved, [78e0e86522ae51313e336a5ff9b6763d1a08c48d]
