@@ -83,7 +83,7 @@ impl AllPortStatus {
         }
     }
 
-    /// Scan the given port, will be recursive if retry > 0
+    /// Scan the given port, will be recursive if counter > 1
     fn scan_port(
         port: u16,
         ip: IpAddr,
