@@ -10,7 +10,7 @@ pub struct HostInfo {
 
 impl HostInfo {
     /// Try to convert a given address into a vec of IP addresses
-	/// Only return self if address valid and Vec is not empty
+    /// Only return self if address valid and Vec is not empty
     pub async fn try_from(address: &str) -> Result<Self, ()> {
         let now = std::time::Instant::now();
         (tokio::time::timeout(
