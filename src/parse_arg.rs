@@ -159,7 +159,7 @@ impl CliArgs {
 mod tests {
     use super::{Cli, PortRange};
 
-	/// Re-useable test to make sure ports get parsed correctly
+    /// Re-useable test to make sure ports get parsed correctly
     fn test(ports: &str, min: u16, max: u16, range: u16) {
         let result = PortRange::from(&Cli {
             address: "127.0.0.1".to_owned(),
@@ -173,11 +173,11 @@ mod tests {
         assert_eq!(result.min, min);
         assert_eq!(result.max, max);
         assert_eq!(result.range_size, range);
-		assert_eq!(result.get_range(), (min..=max))
+        assert_eq!(result.get_range(), (min..=max))
     }
 
     #[test]
-	/// Test that ports are parsed correctly, everything else should be handled by Clap directly
+    /// Test that ports are parsed correctly, everything else should be handled by Clap directly
     fn test_cli_port_range() {
         test("1-1000", 1, 1000, 1000);
         test("1000-1", 1, 1000, 1000);
