@@ -3,13 +3,12 @@
 #############
 FROM ubuntu
 # Set env that we're running in a container
-ENV havn_RUNTIME=container
+ENV HAVN_RUNTIME=container
 
 # Copy application binary from builder image
 COPY ./target/x86_64-unknown-linux-musl/release/havn /app/
 
 # Run the application
-# this is used in the application itself, to stop itself show when running from a docker container, so DO NOT EDIT
 ENTRYPOINT [ "/app/havn"]
 
 # Dev build for testing
