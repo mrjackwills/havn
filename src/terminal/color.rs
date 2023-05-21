@@ -13,13 +13,13 @@ pub enum Color {
 impl fmt::Display for Color {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let disp = match self {
-            Self::Green => "\x1b[32m",
-            Self::Magenta => "\x1b[35m",
-            Self::Red => "\x1b[31m",
-            Self::Reset => "\x1b[0m",
-            Self::Underline => "\x1b[4m",
-            Self::Yellow => "\x1b[33m",
+            Self::Green => "32",
+            Self::Magenta => "35",
+            Self::Red => "31",
+            Self::Reset => "0",
+            Self::Underline => "4",
+            Self::Yellow => "33",
         };
-        write!(f, "{disp}",)
+        write!(f, "\x1b[{disp}m",)
     }
 }
