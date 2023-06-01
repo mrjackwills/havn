@@ -1,3 +1,12 @@
+### Chores
++ dependencies updated, [26d4197f4cf64e05a4973f57e53d603d4da72535], [8a3ea4e86c99e3d282723ea339335f2f81936d1f]
+
+### Refactors
++ spinner, frames into a const, [4332865178fa8d78d5f2c0b95adb5e40622301ea]
+
+### Reverts
++ .devcontainer sparse protocol env removed, behaviour is now default in Rust 1.70, [8fb8579fc6edca68d7f2a68581373106814f5633]
+
 # <a href='https://github.com/mrjackwills/havn/releases/tag/v0.1.1'>v0.1.1</a>
 ### 2023-05-21
 
