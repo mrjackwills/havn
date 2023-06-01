@@ -5,7 +5,7 @@
 + spinner, frames into a const, [4332865178fa8d78d5f2c0b95adb5e40622301ea]
 
 ### Reverts
-+ .devcontainer sparse protocol env removed, behaviour is now default in Rust 1.70, [8fb8579fc6edca68d7f2a68581373106814f5633]
++ .devcontainer sparse protocol env removed, behaviour is now default in Rust 1.70, [2ecf56a4f233423230e8f661068e7429634e0165]
 
 # <a href='https://github.com/mrjackwills/havn/releases/tag/v0.1.1'>v0.1.1</a>
 ### 2023-05-21
