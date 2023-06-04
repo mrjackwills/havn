@@ -5,6 +5,8 @@ use std::{
 
 use crate::terminal::color::Color;
 
+const FRAMES: [char; 10] = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+
 #[derive(Debug, Default)]
 pub struct Spinner(Arc<AtomicBool>);
 
@@ -25,9 +27,8 @@ impl Spinner {
 
     /// Animate the loading icon until `run` is false
     async fn spin(run: Arc<AtomicBool>) {
-        let frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
         while run.load(std::sync::atomic::Ordering::SeqCst) {
-            for i in frames {
+            for i in FRAMES {
                 print!("{c}{i}{r} scanning ", c = Color::Red, r = Color::Reset);
                 std::io::stdout().flush().ok();
                 print!("\r");
