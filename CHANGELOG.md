@@ -3,6 +3,7 @@
 
 ### Docs
 + readme updated, [b2ae7a40a7796e060ac7d4d7838bc60a445d50ff]
++ cli arguments description updated, [bed82a62e45b913001dbf358f463f01f79c7503e]
 
 ### Refactors
 + spinner, frames into a const, [4332865178fa8d78d5f2c0b95adb5e40622301ea]
