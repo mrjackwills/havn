@@ -30,7 +30,7 @@ pub struct Cli {
     )]
     ports: String,
 
-    /// Maximum number of connection attempts per port.
+    /// Maximum number of retry attempts per port.
     #[clap(short = 'r', value_name = "retries", default_value_t = 1)]
     retry: u8,
 
