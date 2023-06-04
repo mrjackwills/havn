@@ -1,5 +1,5 @@
 ### Chores
-+ dependencies updated, [26d4197f4cf64e05a4973f57e53d603d4da72535], [8a3ea4e86c99e3d282723ea339335f2f81936d1f]
++ dependencies updated, [26d4197f4cf64e05a4973f57e53d603d4da72535], [8a3ea4e86c99e3d282723ea339335f2f81936d1f], [2e69302289315cf87adeb142c3737da7e347c897]
 
 ### Refactors
 + spinner, frames into a const, [4332865178fa8d78d5f2c0b95adb5e40622301ea]
