@@ -62,7 +62,7 @@ rm havn_linux_x86_64.tar.gz havn
 
 or, for automatic platform selection, download, and installation (to `$HOME/.local/bin`)
 
-*One should always verify <a href='https://github.com/mrjackwills/havn/blob/main/install.sh' target='_blank' rel='noopener noreferrer'>script content</a> before running in a shell*
+*One should always verify <a href='https://raw.githubusercontent.com/mrjackwills/havn/main/install.sh' target='_blank' rel='noopener noreferrer'>script content</a> before running in a shell*
 
 ```shell
 curl https://raw.githubusercontent.com/mrjackwills/havn/main/install.sh | bash
