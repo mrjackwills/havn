@@ -5,7 +5,7 @@ use std::{
 
 use crate::terminal::color::Color;
 
-const FRAMES: [char;10] = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+const FRAMES: [char; 10] = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
 
 #[derive(Debug, Default)]
 pub struct Spinner(Arc<AtomicBool>);
