@@ -20,10 +20,6 @@ pub struct Cli {
     #[clap(short = 'c', value_name = "concurrent", default_value_t = 1000)]
     concurrent: u16,
 
-    /// Monochrome mode - won't use escape codes to color the text output
-    #[clap(short = 'm', default_value_t = false)]
-    monochrome: bool,
-
     /// Ports to scan, accepts a range, or single port, conflicts with "-p".
     #[clap(
         short = 'p',
@@ -33,6 +29,10 @@ pub struct Cli {
         allow_hyphen_values = true
     )]
     ports: String,
+
+    /// Monochrome mode - remove text colouring
+    #[clap(short = 'm', default_value_t = false)]
+    monochrome: bool,
 
     /// Maximum number of retry attempts per port.
     #[clap(short = 'r', value_name = "retries", default_value_t = 1)]
@@ -141,8 +141,8 @@ impl CliArgs {
         let cli = Cli {
             address: address.unwrap_or("127.0.0.1").to_owned(),
             all_ports: false,
-            concurrent,
             monochrome: false,
+            concurrent,
             ports,
             retry: 1,
             timeout: 1250,
@@ -153,8 +153,8 @@ impl CliArgs {
         Self {
             address: cli.address,
             concurrent: cli.concurrent,
-            ip6: cli.ip_v6,
             monochrome: cli.monochrome,
+            ip6: cli.ip_v6,
             ports: port_range,
             retry: cli.retry,
             timeout: cli.timeout,
@@ -170,14 +170,14 @@ mod tests {
     /// Re-useable test to make sure ports get parsed correctly
     fn test(ports: &str, min: u16, max: u16, range: u16) {
         let result = PortRange::from(&Cli {
+            monochrome: false,
             address: "127.0.0.1".to_owned(),
             all_ports: false,
             concurrent: 1024,
-            monochrome: false,
+            ip_v6: false,
             ports: ports.to_owned(),
             retry: 1,
             timeout: 1000,
-            ip_v6: false,
         });
         assert_eq!(result.min, min);
         assert_eq!(result.max, max);
@@ -198,14 +198,14 @@ mod tests {
         test("random", 1, 1000, 1000);
 
         let result = PortRange::from(&Cli {
+            monochrome: false,
             address: "127.0.0.1".to_owned(),
             all_ports: true,
             concurrent: 1024,
-            monochrome: false,
+            ip_v6: false,
             ports: "".to_owned(),
             retry: 100,
             timeout: 1000,
-            ip_v6: false,
         });
         assert_eq!(result.min, 1);
         assert_eq!(result.max, 65535);

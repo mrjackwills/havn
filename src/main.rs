@@ -40,7 +40,9 @@ fn tokio_signal() {
 #[tokio::main]
 async fn main() {
     let cli_args = parse_arg::CliArgs::new();
+    terminal::text_color(&cli_args);
     let exit_error = || print::address_error(&cli_args);
+
     tokio_signal();
 
     if let Ok(host_info) = host_info::HostInfo::try_from(&cli_args.address).await {
@@ -48,14 +50,14 @@ async fn main() {
             print::name_and_target(&cli_args, ip);
             print::extra_ips(&host_info, ip);
 
-            let spinner = Spinner::start(cli_args.monochrome);
+            let spinner = Spinner::start();
             let now = std::time::Instant::now();
             let scan_output = AllPortStatus::scan_ports(&cli_args, ip).await;
             spinner.stop();
             let done = now.elapsed();
 
-            print::scan_time(&scan_output, done, cli_args.monochrome);
-            print::result_table(&scan_output, cli_args.monochrome);
+            print::scan_time(&scan_output, done);
+            print::result_table(&scan_output);
         } else {
             exit_error();
         }
