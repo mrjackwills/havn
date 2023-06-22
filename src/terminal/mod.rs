@@ -291,8 +291,6 @@ pub mod print {
             assert!(result.contains("unknown"));
         }
 
-        //TODO monochomre = true, output !contains escape codes!
-
         #[test]
         /// Generate extra ip function will either return None, or a String in format "Other IPs: xx"
         fn test_terminal_scan_time() {
