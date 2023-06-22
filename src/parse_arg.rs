@@ -20,6 +20,10 @@ pub struct Cli {
     #[clap(short = 'c', value_name = "concurrent", default_value_t = 1000)]
     concurrent: u16,
 
+    /// Monochrome mode - won't use escape codes to color the text output
+    #[clap(short = 'm', default_value_t = false)]
+    monochrome: bool,
+
     /// Ports to scan, accepts a range, or single port, conflicts with "-p".
     #[clap(
         short = 'p',
@@ -107,6 +111,7 @@ pub struct CliArgs {
     pub address: String,
     pub concurrent: u16,
     pub ip6: bool,
+    pub monochrome: bool,
     pub ports: PortRange,
     pub retry: u8,
     pub timeout: u32,
@@ -122,6 +127,7 @@ impl CliArgs {
             address: cli.address,
             concurrent: cli.concurrent,
             ip6: cli.ip_v6,
+            monochrome: cli.monochrome,
             ports: port_range,
             retry: cli.retry,
             timeout: cli.timeout,
@@ -136,6 +142,7 @@ impl CliArgs {
             address: address.unwrap_or("127.0.0.1").to_owned(),
             all_ports: false,
             concurrent,
+            monochrome: false,
             ports,
             retry: 1,
             timeout: 1250,
@@ -147,6 +154,7 @@ impl CliArgs {
             address: cli.address,
             concurrent: cli.concurrent,
             ip6: cli.ip_v6,
+            monochrome: cli.monochrome,
             ports: port_range,
             retry: cli.retry,
             timeout: cli.timeout,
@@ -165,6 +173,7 @@ mod tests {
             address: "127.0.0.1".to_owned(),
             all_ports: false,
             concurrent: 1024,
+            monochrome: false,
             ports: ports.to_owned(),
             retry: 1,
             timeout: 1000,
@@ -192,6 +201,7 @@ mod tests {
             address: "127.0.0.1".to_owned(),
             all_ports: true,
             concurrent: 1024,
+            monochrome: false,
             ports: "".to_owned(),
             retry: 100,
             timeout: 1000,

@@ -26,10 +26,14 @@ impl Spinner {
     }
 
     /// Animate the loading icon until `run` is false
-    async fn spin(run: Arc<AtomicBool>) {
+    async fn spin(run: Arc<AtomicBool>, monochrome: bool) {
         while run.load(std::sync::atomic::Ordering::SeqCst) {
             for i in FRAMES {
-                print!("{c}{i}{r} scanning ", c = Color::Red, r = Color::Reset);
+                print!(
+                    "{c}{i}{r} scanning ",
+                    c = Color::Red.display(monochrome),
+                    r = Color::Reset.display(monochrome)
+                );
                 std::io::stdout().flush().ok();
                 print!("\r");
                 tokio::time::sleep(std::time::Duration::from_millis(75)).await;
@@ -39,10 +43,10 @@ impl Spinner {
 
     /// Print to stdout a spinner, with the text "scanning"
     /// Spawns into own thread
-    pub fn start() -> Self {
+    pub fn start(monochrome: bool) -> Self {
         let spinner = Self(Arc::new(AtomicBool::new(true)));
         Self::hide_cursor();
-        tokio::spawn(Self::spin(Arc::clone(&spinner.0)));
+        tokio::spawn(Self::spin(Arc::clone(&spinner.0), monochrome));
         spinner
     }
 

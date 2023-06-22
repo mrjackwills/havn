@@ -54,25 +54,29 @@ pub mod print {
     }
 
     /// Generate the string for scan_time function
-    fn get_scan_time(result: &AllPortStatus, done: std::time::Duration) -> String {
+    fn get_scan_time(
+        result: &AllPortStatus,
+        done: std::time::Duration,
+        monochrome: bool,
+    ) -> String {
         format!(
             "{g}{t} open{r}, {re}{cl} closed{r}, took {ms}",
-            g = Color::Green,
+            g = Color::Green.display(monochrome),
             t = result.open_len(),
-            r = Color::Reset,
-            re = Color::Red,
+            r = Color::Reset.display(monochrome),
+            re = Color::Red.display(monochrome),
             cl = result.closed,
             ms = ms_to_string(done)
         )
     }
 
     /// Generate the results table, assuming there are open ports
-    fn get_table(result: &AllPortStatus) -> Option<String> {
+    fn get_table(result: &AllPortStatus, monochrome: bool) -> Option<String> {
         result.get_all_open().map(|ports| {
             let mut output = format!(
                 "{u}PORT{r}  {u}DESCRIPTION{r}",
-                u = Color::Underline,
-                r = Color::Reset
+                u = Color::Underline.display(monochrome),
+                r = Color::Reset.display(monochrome)
             );
 
             for (index, (port, desc)) in ports.iter().enumerate() {
@@ -81,18 +85,23 @@ pub mod print {
                 } else {
                     Color::Reset
                 };
-                output.push_str(&format!("\n{}{port:<5} {desc}{}", color, Color::Reset));
+                output.push_str(&format!(
+                    "\n{}{port:<5} {desc}{}",
+                    color.display(monochrome),
+                    Color::Reset.display(monochrome)
+                ));
             }
             output
         })
     }
 
     /// Print invalid address to screen, then quit with error code 1
-    pub fn address_error(address: &str) {
+    pub fn address_error(cli_args: &CliArgs) {
         println!(
-            "{c}Error with address: {r}{address}",
-            c = Color::Red,
-            r = Color::Reset,
+            "{c}Error with address: {r}{a}",
+            a = cli_args.address,
+            c = Color::Red.display(cli_args.monochrome),
+            r = Color::Reset.display(cli_args.monochrome),
         );
         exit(1);
     }
@@ -114,19 +123,23 @@ pub mod print {
             + 19)
             .map(|_| '═')
             .collect::<String>();
-        println!("{m}{bar}\n|__|  /\\  \\  / |\\ |{r} {ip}{y}{ports}{r}\n{m}|  | /--\\  \\/  | \\|{r} {address}\n{m}{bar}{r}", m = Color::Magenta, y = Color::Yellow, r = Color::Reset);
+        println!("{m}{bar}\n|__|  /\\  \\  / |\\ |{r} {ip}{y}{ports}{r}\n{m}|  | /--\\  \\/  | \\|{r} {address}\n{m}{bar}{r}",
+        m = Color::Magenta.display(cli_args.monochrome),
+        y = Color::Yellow.display(cli_args.monochrome),
+        r = Color::Reset.display(cli_args.monochrome)
+    );
     }
 
     /// If any open ports found, print the results into a table
-    pub fn result_table(result: &AllPortStatus) {
-        if let Some(result) = get_table(result) {
+    pub fn result_table(result: &AllPortStatus, monochrome: bool) {
+        if let Some(result) = get_table(result, monochrome) {
             println!("{result}");
         }
     }
 
     /// Print totals of open & closed ports, and the time it took to scan them
-    pub fn scan_time(result: &AllPortStatus, done: std::time::Duration) {
-        println!("{}", get_scan_time(result, done));
+    pub fn scan_time(result: &AllPortStatus, done: std::time::Duration, monochrome: bool) {
+        println!("{}", get_scan_time(result, done, monochrome));
     }
 
     #[cfg(test)]
@@ -248,14 +261,15 @@ pub mod print {
                 )
             );
         }
+
         #[test]
         /// Generate extra ip function will either return None, or a String in format "Other IPs: xx"
         fn test_terminal_table() {
             let input = AllPortStatus::test_new(HashSet::new(), 10, 1, 0);
-            assert!(get_table(&input).is_none());
+            assert!(get_table(&input, false).is_none());
 
             let input = AllPortStatus::test_new(HashSet::from([80]), 1, 80, 0);
-            let result = get_table(&input);
+            let result = get_table(&input, false);
             assert!(result.is_some());
             let result = result.unwrap();
             assert!(result.contains("PORT"));
@@ -264,7 +278,7 @@ pub mod print {
             assert!(result.contains("http"));
 
             let input = AllPortStatus::test_new(HashSet::from([443, 6379, 32825]), 3, 32825, 0);
-            let result = get_table(&input);
+            let result = get_table(&input, false);
             assert!(result.is_some());
             let result = result.unwrap();
             assert!(result.contains("PORT"));
@@ -277,6 +291,8 @@ pub mod print {
             assert!(result.contains("unknown"));
         }
 
+        //TODO monochomre = true, output !contains escape codes!
+
         #[test]
         /// Generate extra ip function will either return None, or a String in format "Other IPs: xx"
         fn test_terminal_scan_time() {
@@ -284,7 +300,7 @@ pub mod print {
                 AllPortStatus::test_new(HashSet::new(), 10, 1, 10),
                 std::time::Duration::from_millis(100),
             );
-            let result = get_scan_time(&input.0, input.1);
+            let result = get_scan_time(&input.0, input.1, false);
             assert!(result.contains("0 open"));
             assert!(result.contains("10 closed"));
             assert!(result.contains(", took 0.100s"));
@@ -293,10 +309,64 @@ pub mod print {
                 AllPortStatus::test_new(HashSet::from([1, 2, 3]), 10, 1, 6),
                 std::time::Duration::from_millis(2500),
             );
-            let result = get_scan_time(&input.0, input.1);
+            let result = get_scan_time(&input.0, input.1, false);
             assert!(result.contains("3 open"));
             assert!(result.contains("6 closed"));
             assert!(result.contains(", took 2.500s"));
+        }
+
+        #[test]
+        /// Check that escape codes are printed to output
+        fn test_terminal_monochrome_false() {
+            let input = (
+                AllPortStatus::test_new(HashSet::new(), 10, 1, 10),
+                std::time::Duration::from_millis(100),
+            );
+            let result = get_scan_time(&input.0, input.1, false);
+
+            assert!(result.contains("\x1b[32m0 open\x1b[0m"));
+            assert!(result.contains("\x1b[31m10 closed\x1b[0m"));
+
+            let input = AllPortStatus::test_new(HashSet::from([443, 6379, 32825]), 3, 32825, 0);
+            let result = get_table(&input, false);
+            assert!(result.is_some());
+            let result = result.unwrap();
+
+            assert!(result.contains("\x1b[33m443"));
+            assert!(result.contains("https\x1b[0m"));
+
+            assert!(result.contains("6379"));
+            assert!(result.contains("redis"));
+
+            assert!(result.contains("\x1b[33m32825"));
+            assert!(result.contains("unknown\x1b[0m"));
+        }
+
+        #[test]
+        /// Check escape codes are not printed to output
+        fn test_terminal_monochrome_true() {
+            let input = (
+                AllPortStatus::test_new(HashSet::new(), 10, 1, 10),
+                std::time::Duration::from_millis(100),
+            );
+            let result = get_scan_time(&input.0, input.1, true);
+
+            assert!(!result.contains("\x1b[32m0 open\x1b[0m"));
+            assert!(!result.contains("\x1b[31m10 closed\x1b[0m"));
+
+            let input = AllPortStatus::test_new(HashSet::from([443, 6379, 32825]), 3, 32825, 0);
+            let result = get_table(&input, true);
+            assert!(result.is_some());
+            let result = result.unwrap();
+
+            assert!(!result.contains("\x1b[33m443"));
+            assert!(!result.contains("https\x1b[0m"));
+
+            assert!(result.contains("6379"));
+            assert!(result.contains("redis"));
+
+            assert!(!result.contains("\x1b[33m32825"));
+            assert!(!result.contains("unknown\x1b[0m"));
         }
     }
 }
