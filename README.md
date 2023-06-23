@@ -78,6 +78,7 @@ Available command line arguments
 | ```[string]```			| The address or IP to scan. [default: `127.0.0.1`] |
 |```-a```					| Scan every port, from `1` to `65535`, conflicts with `-p` |
 |```-c [number]```			| How many concurrent request should be made. [default: `1000`] |
+|```-m```					| Monochrome mode - won't colourize the output [default: `false`] |
 |```-p [number / string]```	| Inclusive port range to scan, accepts either a range: `-300`, `101-200`, or a single port `80`, conflicts with `-a` [default: `-1000`] |
 |```-r [number]```			| Retry attempts per port. [default: `1`] |
 |```-t [number]```			| Timeout for each request in milliseconds. [default: `2000`] |

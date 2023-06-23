@@ -39,11 +39,8 @@ fn tokio_signal() {
 
 #[tokio::main]
 async fn main() {
-    #[cfg(windows)]
-    {
-        terminal::windows_text_color();
-    }
     let cli_args = parse_arg::CliArgs::new();
+    terminal::text_color(&cli_args);
     let exit_error = || print::address_error(&cli_args);
 
     tokio_signal();

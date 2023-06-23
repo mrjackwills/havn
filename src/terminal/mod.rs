@@ -1,8 +1,7 @@
 mod color;
 pub mod spinner;
 
-#[cfg(windows)]
-pub use color::windows_text_color;
+pub use color::text_color;
 
 pub mod print {
     use std::net::IpAddr;
@@ -145,7 +144,7 @@ pub mod print {
             net::{Ipv4Addr, Ipv6Addr},
         };
 
-        use crate::parse_arg;
+        use crate::{parse_arg, terminal::color::MONOCHROME};
 
         use super::*;
 
@@ -308,58 +307,60 @@ pub mod print {
             assert!(result.contains(", took 2.500s"));
         }
 
-        // #[test]
-        // /// Check that escape codes are printed to output
-        // fn test_terminal_monochrome_false() {
-        //     let input = (
-        //         AllPortStatus::test_new(HashSet::new(), 10, 1, 10),
-        //         std::time::Duration::from_millis(100),
-        //     );
-        //     let result = get_scan_time(&input.0, input.1);
+        #[test]
+        /// Test that escape codes are printed to output
+        fn test_terminal_monochrome_false() {
+            let input = (
+                AllPortStatus::test_new(HashSet::new(), 10, 1, 10),
+                std::time::Duration::from_millis(100),
+            );
+            let result = get_scan_time(&input.0, input.1);
 
-        //     assert!(result.contains("\x1b[32m0 open\x1b[0m"));
-        //     assert!(result.contains("\x1b[31m10 closed\x1b[0m"));
+            assert!(result.contains("\x1b[32m0 open\x1b[0m"));
+            assert!(result.contains("\x1b[31m10 closed\x1b[0m"));
 
-        //     let input = AllPortStatus::test_new(HashSet::from([443, 6379, 32825]), 3, 32825, 0);
-        //     let result = get_table(&input);
-        //     assert!(result.is_some());
-        //     let result = result.unwrap();
+            let input = AllPortStatus::test_new(HashSet::from([443, 6379, 32825]), 3, 32825, 0);
+            let result = get_table(&input);
+            assert!(result.is_some());
+            let result = result.unwrap();
 
-        //     assert!(result.contains("\x1b[33m443"));
-        //     assert!(result.contains("https\x1b[0m"));
+            assert!(result.contains("\x1b[33m443"));
+            assert!(result.contains("https\x1b[0m"));
 
-        //     assert!(result.contains("6379"));
-        //     assert!(result.contains("redis"));
+            assert!(result.contains("6379"));
+            assert!(result.contains("redis"));
 
-        //     assert!(result.contains("\x1b[33m32825"));
-        //     assert!(result.contains("unknown\x1b[0m"));
-        // }
+            assert!(result.contains("\x1b[33m32825"));
+            assert!(result.contains("unknown\x1b[0m"));
+        }
 
-        // #[test]
-        // /// Check escape codes are not printed to output
-        // fn test_terminal_monochrome_true() {
-        //     let input = (
-        //         AllPortStatus::test_new(HashSet::new(), 10, 1, 10),
-        //         std::time::Duration::from_millis(100),
-        //     );
-        //     let result = get_scan_time(&input.0, input.1);
+        #[test]
+        /// Test that escape codes are not printed to output
+        fn test_terminal_monochrome_true() {
+            MONOCHROME.set(true).unwrap();
 
-        //     assert!(!result.contains("\x1b[32m0 open\x1b[0m"));
-        //     assert!(!result.contains("\x1b[31m10 closed\x1b[0m"));
+            let input = (
+                AllPortStatus::test_new(HashSet::new(), 10, 1, 10),
+                std::time::Duration::from_millis(100),
+            );
+            let result = get_scan_time(&input.0, input.1);
 
-        //     let input = AllPortStatus::test_new(HashSet::from([443, 6379, 32825]), 3, 32825, 0);
-        //     let result = get_table(&input);
-        //     assert!(result.is_some());
-        //     let result = result.unwrap();
+            assert!(!result.contains("\x1b[32m0 open\x1b[0m"));
+            assert!(!result.contains("\x1b[31m10 closed\x1b[0m"));
 
-        //     assert!(!result.contains("\x1b[33m443"));
-        //     assert!(!result.contains("https\x1b[0m"));
+            let input = AllPortStatus::test_new(HashSet::from([443, 6379, 32825]), 3, 32825, 0);
+            let result = get_table(&input);
+            assert!(result.is_some());
+            let result = result.unwrap();
 
-        //     assert!(result.contains("6379"));
-        //     assert!(result.contains("redis"));
+            assert!(!result.contains("\x1b[33m443"));
+            assert!(!result.contains("https\x1b[0m"));
 
-        //     assert!(!result.contains("\x1b[33m32825"));
-        //     assert!(!result.contains("unknown\x1b[0m"));
-        // }
+            assert!(result.contains("6379"));
+            assert!(result.contains("redis"));
+
+            assert!(!result.contains("\x1b[33m32825"));
+            assert!(!result.contains("unknown\x1b[0m"));
+        }
     }
 }
