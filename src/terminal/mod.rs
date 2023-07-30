@@ -1,6 +1,8 @@
 mod color;
 pub mod spinner;
 
+pub use color::text_color;
+
 pub mod print {
     use std::net::IpAddr;
 
@@ -88,9 +90,10 @@ pub mod print {
     }
 
     /// Print invalid address to screen, then quit with error code 1
-    pub fn address_error(address: &str) {
+    pub fn address_error(cli_args: &CliArgs) {
         println!(
-            "{c}Error with address: {r}{address}",
+            "{c}Error with address: {r}{a}",
+            a = cli_args.address,
             c = Color::Red,
             r = Color::Reset,
         );
@@ -114,7 +117,11 @@ pub mod print {
             + 19)
             .map(|_| '═')
             .collect::<String>();
-        println!("{m}{bar}\n|__|  /\\  \\  / |\\ |{r} {ip}{y}{ports}{r}\n{m}|  | /--\\  \\/  | \\|{r} {address}\n{m}{bar}{r}", m = Color::Magenta, y = Color::Yellow, r = Color::Reset);
+        println!("{m}{bar}\n|__|  /\\  \\  / |\\ |{r} {ip}{y}{ports}{r}\n{m}|  | /--\\  \\/  | \\|{r} {address}\n{m}{bar}{r}",
+        m = Color::Magenta,
+        y = Color::Yellow,
+        r = Color::Reset
+);
     }
 
     /// If any open ports found, print the results into a table
@@ -137,7 +144,7 @@ pub mod print {
             net::{Ipv4Addr, Ipv6Addr},
         };
 
-        use crate::parse_arg;
+        use crate::{parse_arg, terminal::color::MONOCHROME};
 
         use super::*;
 
@@ -248,6 +255,7 @@ pub mod print {
                 )
             );
         }
+
         #[test]
         /// Generate extra ip function will either return None, or a String in format "Other IPs: xx"
         fn test_terminal_table() {
@@ -297,6 +305,62 @@ pub mod print {
             assert!(result.contains("3 open"));
             assert!(result.contains("6 closed"));
             assert!(result.contains(", took 2.500s"));
+        }
+
+        #[test]
+        /// Test that escape codes are printed to output
+        fn test_terminal_monochrome_false() {
+            MONOCHROME.store(false, std::sync::atomic::Ordering::SeqCst);
+            let input = (
+                AllPortStatus::test_new(HashSet::new(), 10, 1, 10),
+                std::time::Duration::from_millis(100),
+            );
+            let result = get_scan_time(&input.0, input.1);
+
+            assert!(result.contains("\x1b[32m0 open\x1b[0m"));
+            assert!(result.contains("\x1b[31m10 closed\x1b[0m"));
+
+            let input = AllPortStatus::test_new(HashSet::from([443, 6379, 32825]), 3, 32825, 0);
+            let result = get_table(&input);
+            assert!(result.is_some());
+            let result = result.unwrap();
+
+            assert!(result.contains("\x1b[33m443"));
+            assert!(result.contains("https\x1b[0m"));
+
+            assert!(result.contains("6379"));
+            assert!(result.contains("redis"));
+
+            assert!(result.contains("\x1b[33m32825"));
+            assert!(result.contains("unknown\x1b[0m"));
+        }
+
+        #[test]
+        /// Test that escape codes are not printed to output
+        fn test_terminal_monochrome_true() {
+            MONOCHROME.store(true, std::sync::atomic::Ordering::SeqCst);
+            let input = (
+                AllPortStatus::test_new(HashSet::new(), 10, 1, 10),
+                std::time::Duration::from_millis(100),
+            );
+            let result = get_scan_time(&input.0, input.1);
+
+            assert!(!result.contains("\x1b[32m0 open\x1b[0m"));
+            assert!(!result.contains("\x1b[31m10 closed\x1b[0m"));
+
+            let input = AllPortStatus::test_new(HashSet::from([443, 6379, 32825]), 3, 32825, 0);
+            let result = get_table(&input);
+            assert!(result.is_some());
+            let result = result.unwrap();
+
+            assert!(!result.contains("\x1b[33m443"));
+            assert!(!result.contains("https\x1b[0m"));
+
+            assert!(result.contains("6379"));
+            assert!(result.contains("redis"));
+
+            assert!(!result.contains("\x1b[33m32825"));
+            assert!(!result.contains("unknown\x1b[0m"));
         }
     }
 }
