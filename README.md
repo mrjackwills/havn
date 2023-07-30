@@ -151,6 +151,12 @@ cross build --target aarch64-unknown-linux-musleabihf --release
 cross build --target arm-unknown-linux-musleabihf --release
 ```
 
+#### Windows x86_64
+
+```shell
+cross build --target x86_64-pc-windows-gnu --release
+```
+
 ### Without Docker
 #### 64bit arm (pi 4, pi zero w 2)
 edit `~/.cargo/config`
@@ -171,9 +177,25 @@ edit `~/.cargo/config`
 linker = "arm-linux-gnueabihf-ld"
 ```
 
-```rust
+```shell
 sudo apt update && sudo apt install gcc-arm-linux-gnueabihf -y
 rustup target add arm-unknown-linux-musleabihf
 cargo build --target arm-unknown-linux-musleabihf --release
 ```
+
+#### Windows (build on linux)
+
+edit `~/.cargo/config`
+```
+[target.x86_64-pc-windows-gnu]
+linker = "x86_64-w64-mingw32-gcc"
+ar = "x86_64-w64-mingw32-gcc-ar"
+```
+
+```shell
+sudo apt update && sudo apt install mingw-w64
+rustup target add x86_64-pc-windows-gnu
+cargo build --target x86_64-pc-windows-gnu --release
+```
+
 **Untested on other platforms**
