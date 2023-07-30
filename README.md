@@ -78,6 +78,7 @@ Available command line arguments
 | ```[string]```			| The address or IP to scan. [default: `127.0.0.1`] |
 |```-a```					| Scan every port, from `1` to `65535`, conflicts with `-p` |
 |```-c [number]```			| How many concurrent request should be made. [default: `1000`] |
+|```-m```					| Monochrome mode - won't colourize the output [default: `false`] |
 |```-p [number / string]```	| Inclusive port range to scan, accepts either a range: `-300`, `101-200`, or a single port `80`, conflicts with `-a` [default: `-1000`] |
 |```-r [number]```			| Retry attempts per port. [default: `1`] |
 |```-t [number]```			| Timeout for each request in milliseconds. [default: `2000`] |
@@ -150,6 +151,12 @@ cross build --target aarch64-unknown-linux-musleabihf --release
 cross build --target arm-unknown-linux-musleabihf --release
 ```
 
+#### Windows x86_64
+
+```shell
+cross build --target x86_64-pc-windows-gnu --release
+```
+
 ### Without Docker
 #### 64bit arm (pi 4, pi zero w 2)
 edit `~/.cargo/config`
@@ -170,9 +177,25 @@ edit `~/.cargo/config`
 linker = "arm-linux-gnueabihf-ld"
 ```
 
-```rust
+```shell
 sudo apt update && sudo apt install gcc-arm-linux-gnueabihf -y
 rustup target add arm-unknown-linux-musleabihf
 cargo build --target arm-unknown-linux-musleabihf --release
 ```
+
+#### Windows (build on linux)
+
+edit `~/.cargo/config`
+```
+[target.x86_64-pc-windows-gnu]
+linker = "x86_64-w64-mingw32-gcc"
+ar = "x86_64-w64-mingw32-gcc-ar"
+```
+
+```shell
+sudo apt update && sudo apt install mingw-w64
+rustup target add x86_64-pc-windows-gnu
+cargo build --target x86_64-pc-windows-gnu --release
+```
+
 **Untested on other platforms**

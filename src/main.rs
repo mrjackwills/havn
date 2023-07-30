@@ -40,7 +40,9 @@ fn tokio_signal() {
 #[tokio::main]
 async fn main() {
     let cli_args = parse_arg::CliArgs::new();
-    let exit_error = || print::address_error(&cli_args.address);
+    terminal::text_color(&cli_args);
+    let exit_error = || print::address_error(&cli_args);
+
     tokio_signal();
 
     if let Ok(host_info) = host_info::HostInfo::try_from(&cli_args.address).await {
