@@ -15,7 +15,7 @@ categories = ["command-line-utilities"]
 
 [dependencies]
 clap = { version="4.3", features = ["color", "derive", "unicode"] }
-tokio = { version = "1.28", features = ["macros", "net", "parking_lot", "rt", "rt-multi-thread", "signal", "sync", "time"] }
+tokio = { version = "1.29", features = ["macros", "net", "parking_lot", "rt", "rt-multi-thread", "signal", "sync", "time"] }
 
 [target.'cfg(windows)'.dependencies]
 os_info = "3.7"
