@@ -1,17 +1,14 @@
-### 2023-06-04
+### 2023-07-30
 
 ### Chores
-+ dependencies updated, [26d4197f4cf64e05a4973f57e53d603d4da72535], [8a3ea4e86c99e3d282723ea339335f2f81936d1f], [2e69302289315cf87adeb142c3737da7e347c897]
++ dependencies updated, [67c64d28ab728614b85fa8a3f93a270e226da4e2]
++ create_release v0.3.0, [594a901e374a155736f6f755aa5d71b9ecfbc5fe]
 
 ### Docs
-+ readme updated, [b2ae7a40a7796e060ac7d4d7838bc60a445d50ff]
-+ cli arguments description updated, [bed82a62e45b913001dbf358f463f01f79c7503e]
++ readme updated, [43f23a4780d102a2af20d3c1e0846509389484f5]
 
-### Refactors
-+ spinner, frames into a const, [4332865178fa8d78d5f2c0b95adb5e40622301ea]
-
-### Reverts
-+ .devcontainer sparse protocol env removed, behaviour is now default in Rust 1.70, [2ecf56a4f233423230e8f661068e7429634e0165]
+### Features
++ monochrome mode, closes #1, [1efd39050fa4471d773d5a84607514952e9079d9]
 
 
 see <a href='https://github.com/mrjackwills/havn/blob/main/CHANGELOG.md'>CHANGELOG.md</a> for more details
