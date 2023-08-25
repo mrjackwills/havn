@@ -1,14 +1,7 @@
-### 2023-07-30
+### 2023-08-25
 
 ### Chores
-+ dependencies updated, [67c64d28ab728614b85fa8a3f93a270e226da4e2]
-+ create_release v0.3.0, [594a901e374a155736f6f755aa5d71b9ecfbc5fe]
-
-### Docs
-+ readme updated, [43f23a4780d102a2af20d3c1e0846509389484f5]
-
-### Features
-+ monochrome mode, closes #1, [1efd39050fa4471d773d5a84607514952e9079d9]
++ dependencies updated, [ac14f79ccedd6f35967ecc41b5ea7ce3e9066d17], [c3f526d37d95534ae736a76aa279193bca6c1707]
 
 
 see <a href='https://github.com/mrjackwills/havn/blob/main/CHANGELOG.md'>CHANGELOG.md</a> for more details
