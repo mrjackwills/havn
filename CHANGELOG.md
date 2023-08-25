@@ -1,5 +1,8 @@
+# <a href='https://github.com/mrjackwills/havn/releases/tag/v0.1.4'>v0.1.4</a>
+### 2023-08-25
+
 ### Chores
-+ dependencies updated, [ac14f79ccedd6f35967ecc41b5ea7ce3e9066d17], [c3f526d37d95534ae736a76aa279193bca6c1707]
++ dependencies updated, [ac14f79c](https://github.com/mrjackwills/havn/commit/ac14f79ccedd6f35967ecc41b5ea7ce3e9066d17), [c3f526d3](https://github.com/mrjackwills/havn/commit/c3f526d37d95534ae736a76aa279193bca6c1707)
 
 # <a href='https://github.com/mrjackwills/havn/releases/tag/v0.1.3'>v0.1.3</a>
 ### 2023-07-30
