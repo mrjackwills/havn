@@ -16,7 +16,7 @@
 		"seccomp=unconfined"
 	],
 
-	"postCreateCommand": "cargo install cross typos-cli http-server",
+	"postCreateCommand": "cargo install cross typos-cli",
 
 	"mounts": [
 		"source=/etc/timezone,target=/etc/timezone,type=bind,readonly"
