@@ -1,8 +1,11 @@
+# <a href='https://github.com/mrjackwills/havn/releases/tag/v0.1.5'>v0.1.5</a>
+### 2023-10-09
+
 ### Chores
-+ dependencies updated, [d61cf8d2e8056b13b6de9d8a664495906296cfac], [077fd74db2cb9609ae298c0178c2d5985e4945ee], [2f3829fc7fca5a9f31db56241d9ef0913c121297] 
++ dependencies updated, [d61cf8d2](https://github.com/mrjackwills/havn/commit/d61cf8d2e8056b13b6de9d8a664495906296cfac), [077fd74d](https://github.com/mrjackwills/havn/commit/077fd74db2cb9609ae298c0178c2d5985e4945ee), [2f3829fc](https://github.com/mrjackwills/havn/commit/2f3829fc7fca5a9f31db56241d9ef0913c121297) 
 
 ### Refactors
-+ Spinner fn new, use an atomic swap for spinner.start(), [9a0faa129f34da32823178689448a1a9eebd042a]
++ Spinner fn new, use an atomic swap for spinner.start(), [9a0faa12](https://github.com/mrjackwills/havn/commit/9a0faa129f34da32823178689448a1a9eebd042a)
 
 # <a href='https://github.com/mrjackwills/havn/releases/tag/v0.1.4'>v0.1.4</a>
 ### 2023-08-25

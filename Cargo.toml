@@ -1,6 +1,6 @@
 [package]
 name = "havn"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
 authors = ["Jack Wills <email@mrjackwills.com>"]
 description = "A fast configurable port scanner with reasonable defaults"
