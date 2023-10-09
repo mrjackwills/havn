@@ -63,13 +63,17 @@ impl Spinner {
         }
     }
 
+    pub fn new() -> Self {
+        Self(Arc::new(AtomicBool::new(false)))
+    }
+
     /// Print to stdout a spinner, with the text "scanning"
     /// Spawns into own thread
-    pub fn start() -> Self {
-        let spinner = Self(Arc::new(AtomicBool::new(true)));
-        Self::hide_cursor();
-        tokio::spawn(Self::spin(Arc::clone(&spinner.0)));
-        spinner
+    pub fn start(&self) {
+        if !self.0.swap(true, std::sync::atomic::Ordering::SeqCst) {
+            Self::hide_cursor();
+            tokio::spawn(Self::spin(Arc::clone(&self.0)));
+        }
     }
 
     /// Stop the spinner, and re-show the cursor
