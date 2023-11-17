@@ -23,7 +23,7 @@ nursery = "warn"
 todo = "warn"
 module_name_repetitions = "allow"
 doc_markdown= "allow"
- similar_names = "allow"
+similar_names = "allow"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
