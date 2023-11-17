@@ -11,6 +11,20 @@ readme = "README.md"
 keywords = ["docker", "havn", "port", "scan", "tokio"]
 categories = ["command-line-utilities"]
 
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+unused_async = "warn"
+unwrap_used = "warn"
+expect_used = "warn"
+pedantic = "warn"
+nursery = "warn"
+todo = "warn"
+module_name_repetitions = "allow"
+doc_markdown= "allow"
+ similar_names = "allow"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
