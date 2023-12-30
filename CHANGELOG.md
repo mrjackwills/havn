@@ -1,3 +1,7 @@
+### Chores
++ .devcontainer updated, [eb887f4b0344919c24be2136f874f3eb5bebeaa6]
++ dependencies updated, [4b049b59f1fab35ffdd6c360ce4a6337bf5f55ae]
+
 # <a href='https://github.com/mrjackwills/havn/releases/tag/v0.1.6'>v0.1.6</a>
 ### 2023-11-17
 
