@@ -15,13 +15,10 @@
 		"--security-opt",
 		"seccomp=unconfined"
 	],
-
 	"postCreateCommand": "cargo install cross typos-cli",
-
 	"mounts": [
 		"source=/etc/timezone,target=/etc/timezone,type=bind,readonly"
 	],
-
 	"customizations": {
 		"vscode": {
 			// Add the IDs of extensions you want installed when the container is created.
@@ -36,7 +33,6 @@
 				"tamasfe.even-better-toml",
 				"vadimcn.vscode-lldb"
 			],
-			
 			// Set *default* container specific settings.json values on container create.
 			"settings": {
 				"lldb.executable": "/usr/bin/lldb",
@@ -54,10 +50,10 @@
 		"ghcr.io/devcontainers/features/docker-in-docker:2": {
 			"version": "latest",
 			"moby": true,
-			"dockerDashComposeVersion":"v2"
+			"dockerDashComposeVersion": "v2"
 		},
 		"ghcr.io/devcontainers/features/git:1": {
-				"version":"os-provided"
-			}
+			"version": "os-provided"
+		}
 	}
 }
