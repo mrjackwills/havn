@@ -10,8 +10,7 @@ pub static WIN_10: AtomicBool = AtomicBool::new(false);
 pub fn text_color(cli_args: &CliArgs) {
     let win_10 = os_info::get()
         .edition()
-        .map(|i| !i.contains("Windows 11"))
-        .map_or(false, |s| s);
+        .is_some_and(|i| !i.contains("Windows 11"));
     MONOCHROME.store(
         win_10 || cli_args.monochrome,
         std::sync::atomic::Ordering::SeqCst,
