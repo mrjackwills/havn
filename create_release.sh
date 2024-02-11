@@ -245,9 +245,11 @@ check_allow_unused() {
 	matches_any=$(find . -type d \( -name .git -o -name target \) -prune -o -type f -exec grep -lE '^#!\[allow\(unused\)\]$' {} +)
 	matches_cargo=$(grep "^unused = \"allow\"" ./Cargo.toml)
 	if [ -n "$matches_any" ]; then
-		ask_continue "\"#[allow(unused)]\" in ${matches_any}"
+		echo "\"#[allow(unused)]\" in ${matches_any}"
+		ask_continue
 	elif [ -n "$matches_cargo" ]; then
-		ask_continue "\"unused = \"allow\"\" in Cargo.toml"
+		echo  "\"unused = \"allow\"\" in Cargo.toml"
+		ask_continue
 	fi
 }
 
