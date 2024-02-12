@@ -3,25 +3,17 @@
 {
 	"name": "Rust",
 	"build": {
-		"dockerfile": "Dockerfile",
-		"args": {
-			// Use the VARIANT arg to pick a Debian OS version: buster, bullseye
-			// Use bullseye when on local on arm64/Apple Silicon.
-			"VARIANT": "bullseye"
-		}
+		"dockerfile": "Dockerfile"
 	},
 	"runArgs": [
 		"--cap-add=SYS_PTRACE",
 		"--security-opt",
 		"seccomp=unconfined"
 	],
-
 	"postCreateCommand": "cargo install cross typos-cli",
-
 	"mounts": [
 		"source=/etc/timezone,target=/etc/timezone,type=bind,readonly"
 	],
-
 	"customizations": {
 		"vscode": {
 			// Add the IDs of extensions you want installed when the container is created.
@@ -36,7 +28,6 @@
 				"tamasfe.even-better-toml",
 				"vadimcn.vscode-lldb"
 			],
-			
 			// Set *default* container specific settings.json values on container create.
 			"settings": {
 				"lldb.executable": "/usr/bin/lldb",
@@ -54,10 +45,10 @@
 		"ghcr.io/devcontainers/features/docker-in-docker:2": {
 			"version": "latest",
 			"moby": true,
-			"dockerDashComposeVersion":"v2"
+			"dockerDashComposeVersion": "v2"
 		},
 		"ghcr.io/devcontainers/features/git:1": {
-				"version":"os-provided"
-			}
+			"version": "os-provided"
+		}
 	}
 }

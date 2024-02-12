@@ -1,3 +1,20 @@
+# <a href='https://github.com/mrjackwills/havn/releases/tag/v0.1.8'>v0.1.8</a>
+### 2024-02-12
+
+### Chores
++ .devcontainer updated, [04f23e5e](https://github.com/mrjackwills/havn/commit/04f23e5e3d87334ccf210097e7c0f6abf0d635eb)
++ create_release v0.5.4, [6cbd5114](https://github.com/mrjackwills/havn/commit/6cbd51145a4a108ed98e178a573c990ee1bae118), [fae25ff6](https://github.com/mrjackwills/havn/commit/fae25ff6520c1125dfcec0e5c32f6fa63f438b50)
++ GitHub workflow action dependency bump, [ee2eeb6b](https://github.com/mrjackwills/havn/commit/ee2eeb6bdc7f8187e1522f4dcf5f62830fab0c9b)
++ dependencies updated, [644ed7e9](https://github.com/mrjackwills/havn/commit/644ed7e9632d408cd96f1e7b7f085d46b57aa836), [6242b3ce](https://github.com/mrjackwills/havn/commit/6242b3ce622d1de340341f3dcd2acb586370d93a), [fb2db506](https://github.com/mrjackwills/havn/commit/fb2db50695f38656c37f1b816c0c5db695c0d236)
++ files formatted, [6b6b8335](https://github.com/mrjackwills/havn/commit/6b6b83351bb8dbacf8fce1adeb0404ae743d9852)
+
+### Fixes
++ .gitattributes, [a445136e](https://github.com/mrjackwills/havn/commit/a445136e086b42b7973ff7951b78d9826741e995)
+
+### Refactors
++ text_color map removed, [d1b36d31](https://github.com/mrjackwills/havn/commit/d1b36d31f09407776efcf4dce415a3ab293e8e8f)
++ GitHub action workflow improved, [1c4f7a2c](https://github.com/mrjackwills/havn/commit/1c4f7a2c31b20e61e3109abc975116e5b05b5a74)
+
 # <a href='https://github.com/mrjackwills/havn/releases/tag/v0.1.7'>v0.1.7</a>
 ### 2023-12-30
 
