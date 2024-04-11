@@ -26,6 +26,14 @@ Published on <a href='https://www.crates.io/crates/havn' target='_blank' rel='no
 cargo install havn
 ```
 
+### Arch Linux
+
+`havn` is available in the [official repositories](https://archlinux.org/packages/extra/x86_64/havn). You can install it using:
+
+```shell
+pacman -S havn
+```
+
 ### Docker
 
 Published on <a href='https://hub.docker.com/r/mrjackwills/havn' target='_blank' rel='noopener noreferrer'>Docker Hub</a> and <a href='https://ghcr.io/mrjackwills/havn' target='_blank' rel='noopener noreferrer'>ghcr.io</a>,
