@@ -29,19 +29,21 @@ pub mod print {
         let ip_len = host_info.ip_len();
         if ip_len > 1 {
             let mut output = "Other IPs: ".to_owned();
-            host_info.iter_ip().enumerate().for_each(|(index, i)| {
-                if i != ip {
-                    let suffix = if index == ip_len - 1 { "" } else { ", " };
-                    output.push_str(&format!("{i}{suffix}"));
-                }
-            });
+            host_info
+                .iter_ip()
+                .filter(|z| z != &ip)
+                .enumerate()
+                .for_each(|(index, i)| {
+                    let prefix = if index > 0 { ", " } else { "" };
+                    output.push_str(&format!("{prefix}{i}"));
+                });
             Some(output)
         } else {
             None
         }
     }
 
-    ///  Generate information about the host/address/IP that will be scanned, to be shown on two lines along with the application name
+    /// Generate information about the host/address/IP that will be scanned, to be shown on two lines along with the application name
     fn get_host_ip(cli_args: &CliArgs, ip: &IpAddr) -> (String, String, String) {
         let ports = if cli_args.ports.min == cli_args.ports.max {
             format!("{}", cli_args.ports.min)
