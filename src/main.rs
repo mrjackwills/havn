@@ -31,24 +31,23 @@ async fn main() {
 
     tokio_signal();
 
-    if let Ok(host_info) = host_info::HostInfo::try_from(&cli_args.address).await {
-        if let Some(ip) = host_info.get_ip(&cli_args) {
-            print::name_and_target(&cli_args, ip);
-            print::extra_ips(&host_info, ip);
+    let Ok(host_info) = host_info::HostInfo::try_from(&cli_args.address).await else {
+        return exit_error();
+    };
+    let Some(ip) = host_info.get_ip(&cli_args) else {
+        return exit_error();
+    };
 
-            let spinner = Spinner::new();
-            spinner.start();
-            let now = std::time::Instant::now();
-            let scan_output = AllPortStatus::scan_ports(&cli_args, ip).await;
-            spinner.stop();
-            let done = now.elapsed();
+    print::name_and_target(&cli_args, ip);
+    print::extra_ips(&host_info, ip);
 
-            print::scan_time(&scan_output, done);
-            print::result_table(&scan_output);
-        } else {
-            exit_error();
-        }
-    } else {
-        exit_error();
-    }
+    let spinner = Spinner::new();
+    spinner.start();
+    let now = std::time::Instant::now();
+    let scan_output = AllPortStatus::scan_ports(&cli_args, ip).await;
+    spinner.stop();
+    let done = now.elapsed();
+
+    print::scan_time(&scan_output, done);
+    print::result_table(&scan_output);
 }
