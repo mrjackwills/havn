@@ -37,18 +37,17 @@ pub enum Color {
 
 impl fmt::Display for Color {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let disp = match self {
-            Self::Green => "32",
-            Self::Magenta => "35",
-            Self::Red => "31",
-            Self::Reset => "0",
-            Self::Underline => "4",
-            Self::Yellow => "33",
-        };
-
         if MONOCHROME.load(std::sync::atomic::Ordering::SeqCst) {
             Ok(())
         } else {
+            let disp = match self {
+                Self::Green => "32",
+                Self::Magenta => "35",
+                Self::Red => "31",
+                Self::Reset => "0",
+                Self::Underline => "4",
+                Self::Yellow => "33",
+            };
             write!(f, "\x1b[{disp}m")
         }
     }
