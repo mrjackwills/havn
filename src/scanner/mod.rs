@@ -84,6 +84,7 @@ impl AllPortStatus {
     }
 
     /// Scan the given port, will be recursive if counter > 1
+    /// Should this be changed to an async fn that just uses a while loop, instead of Box::pin recursion?
     fn scan_port(
         port: u16,
         ip: IpAddr,

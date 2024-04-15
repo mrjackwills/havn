@@ -22,14 +22,13 @@ enum Cursor {
 
 impl fmt::Display for Cursor {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let disp = match self {
-            Self::Show => "h",
-            Self::Hide => "l",
-        };
-
         if WIN_10.load(std::sync::atomic::Ordering::SeqCst) {
             Ok(())
         } else {
+            let disp = match self {
+                Self::Show => "h",
+                Self::Hide => "l",
+            };
             write!(f, "\x1b[?25{disp}")
         }
     }
@@ -47,6 +46,7 @@ impl Spinner {
     }
 
     /// Animate the loading icon until `run` is false
+    /// Should this be converted to non-async, and spawned using std::thread?
     async fn spin(run: Arc<AtomicBool>) {
         while run.load(std::sync::atomic::Ordering::SeqCst) {
             let frames = if WIN_10.load(std::sync::atomic::Ordering::SeqCst) {
