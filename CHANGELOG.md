@@ -1,3 +1,9 @@
+### Chores
++ dependencies updated, [7c39607227690f91090d2beeb6eee62b53fbb43d]
+
+### Fixes
++ Fix `arch` command not found, thanks [Chleba](https://github.com/Chleba), [b4d4c2b51d8c492be97d7aa02d84e323acdc8a69]
+
 # <a href='https://github.com/mrjackwills/havn/releases/tag/v0.1.10'>v0.1.10</a>
 ### 2024-04-15
 
