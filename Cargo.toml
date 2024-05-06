@@ -1,6 +1,6 @@
 [package]
 name = "havn"
-version = "0.1.10"
+version = "0.1.11"
 edition = "2021"
 authors = ["Jack Wills <email@mrjackwills.com>"]
 description = "A fast configurable port scanner with reasonable defaults"
@@ -15,11 +15,11 @@ categories = ["command-line-utilities"]
 unsafe_code = "forbid"
 
 [lints.clippy]
+nursery = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
 unused_async = "warn"
 unwrap_used = "warn"
 expect_used = "warn"
-pedantic = "warn"
-nursery = "warn"
 todo = "warn"
 module_name_repetitions = "allow"
 doc_markdown = "allow"

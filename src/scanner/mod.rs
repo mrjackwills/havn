@@ -242,7 +242,7 @@ mod tests {
         });
         assert_eq!(result.closed, 9);
         assert_eq!(result.open_len(), 1);
-        assert!(result.open.get(&80).is_some());
+        assert!(result.open.contains(&80));
     }
 
     #[test]
