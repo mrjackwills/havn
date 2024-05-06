@@ -1,9 +1,12 @@
+# <a href='https://github.com/mrjackwills/havn/releases/tag/v0.1.11'>v0.1.11</a>
+### 2024-05-06
+
 ### Chores
-+ dependencies updated, [7c39607227690f91090d2beeb6eee62b53fbb43d], [81f1b9e6fb5998e02a5ebc8904bf5bb5d2ca5ffb], [af2c9d226925b2571620d0306b72e80764a96ea4]
-+ Rust 1.78.0 linting, [ed6b20f6a0284dd7c0cc858acff14bda5a15a31a]
++ dependencies updated, [7c396072](https://github.com/mrjackwills/havn/commit/7c39607227690f91090d2beeb6eee62b53fbb43d), [81f1b9e6](https://github.com/mrjackwills/havn/commit/81f1b9e6fb5998e02a5ebc8904bf5bb5d2ca5ffb), [af2c9d22](https://github.com/mrjackwills/havn/commit/af2c9d226925b2571620d0306b72e80764a96ea4)
++ Rust 1.78.0 linting, [ed6b20f6](https://github.com/mrjackwills/havn/commit/ed6b20f6a0284dd7c0cc858acff14bda5a15a31a)
 
 ### Fixes
-+ Fix `arch` command not found, thanks [Chleba](https://github.com/Chleba), [b4d4c2b51d8c492be97d7aa02d84e323acdc8a69]
++ Fix `arch` command not found, thanks [Chleba](https://github.com/Chleba), [b4d4c2b5](https://github.com/mrjackwills/havn/commit/b4d4c2b51d8c492be97d7aa02d84e323acdc8a69)
 
 # <a href='https://github.com/mrjackwills/havn/releases/tag/v0.1.10'>v0.1.10</a>
 ### 2024-04-15
