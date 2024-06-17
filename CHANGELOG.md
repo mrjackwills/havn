@@ -1,3 +1,6 @@
+### Chores
++ dependencies updated, [eb48e49f4efe059fc163b3867d5410cd191f90b6]
+
 # <a href='https://github.com/mrjackwills/havn/releases/tag/v0.1.11'>v0.1.11</a>
 ### 2024-05-06
 
