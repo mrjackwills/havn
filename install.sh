@@ -9,7 +9,7 @@ esac
 
 if [ -n "$SUFFIX" ]; then
 	HAVN_GZ="havn_linux_${SUFFIX}.tar.gz"
-	wget "https://github.com/mrjackwills/havn/releases/latest/download/${HAVN_GZ}"
+	curl -L -O "https://github.com/mrjackwills/havn/releases/latest/download/${HAVN_GZ}"
 	tar xzvf "${HAVN_GZ}" havn
 	install -Dm 755 havn -t "${HOME}/.local/bin"
 	rm "${HAVN_GZ}" havn

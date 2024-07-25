@@ -20,11 +20,11 @@
 			"extensions": [
 				"bmuskalla.vscode-tldr",
 				"christian-kohler.path-intellisense",
+				"fill-labs.dependi",
 				"foxundermoon.shell-format",
 				"mutantdino.resourcemonitor",
 				"redhat.vscode-yaml",
 				"rust-lang.rust-analyzer",
-				"serayuzgur.crates",
 				"tamasfe.even-better-toml",
 				"vadimcn.vscode-lldb"
 			],
