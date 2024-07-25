@@ -1,10 +1,13 @@
+# <a href='https://github.com/mrjackwills/havn/releases/tag/v0.1.13'>v0.1.13</a>
+### 2024-07-25
+
 ### Chores
-+ .devcontainer updated, [d79cbe37053dc1f41ca843e64e75612a369e9978]
-+ dependencies updated, [1809faa95e28daf61330b72333fd97a03a721002]
++ .devcontainer updated, [d79cbe37](https://github.com/mrjackwills/havn/commit/d79cbe37053dc1f41ca843e64e75612a369e9978)
++ dependencies updated, [1809faa9](https://github.com/mrjackwills/havn/commit/1809faa95e28daf61330b72333fd97a03a721002)
 
 ### Fixes
-+ install.sh use curl, [ba6218c7b365bfbf1ce025088e8e26caac017290]
-+ dockerfile lowercase stages, [98e5f72227038d8b5927d458fe524c6d27e21fc2]
++ install.sh use curl, [ba6218c7](https://github.com/mrjackwills/havn/commit/ba6218c7b365bfbf1ce025088e8e26caac017290)
++ dockerfile lowercase stages, [98e5f722](https://github.com/mrjackwills/havn/commit/98e5f72227038d8b5927d458fe524c6d27e21fc2)
 
 # <a href='https://github.com/mrjackwills/havn/releases/tag/v0.1.12'>v0.1.12</a>
 ### 2024-06-17
