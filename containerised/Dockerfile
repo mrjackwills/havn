@@ -2,7 +2,7 @@
 ## Builder ##
 #############
 
-FROM --platform=linux/amd64 rust:slim as BUILDER
+FROM --platform=linux/amd64 rust:slim AS builder
 
 ARG TARGETARCH
 
@@ -49,7 +49,7 @@ RUN cp /usr/src/havn/target/$(cat /.platform)/release/havn /
 ## Runtime ##
 #############
 
-FROM scratch AS RUNTIME
+FROM scratch AS runtime
 
 # Set an ENV that we're running in a container
 ENV HAVN_RUNTIME=container
