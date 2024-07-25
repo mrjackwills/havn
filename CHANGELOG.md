@@ -4,6 +4,7 @@
 
 ### Fixes
 + install.sh use curl, [ba6218c7b365bfbf1ce025088e8e26caac017290]
++ dockerfile lowercase stages, [98e5f72227038d8b5927d458fe524c6d27e21fc2]
 
 # <a href='https://github.com/mrjackwills/havn/releases/tag/v0.1.12'>v0.1.12</a>
 ### 2024-06-17
