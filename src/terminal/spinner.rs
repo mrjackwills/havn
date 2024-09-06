@@ -85,7 +85,6 @@ impl Spinner {
 
 // todo test spinners somehow
 #[cfg(test)]
-#[allow(clippy::unwrap_used)]
 mod tests {
     use super::Cursor;
     use crate::terminal::color::WIN_10;

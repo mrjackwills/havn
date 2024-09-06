@@ -5,7 +5,6 @@ use clap::Parser;
 pub const PORT_UPPER_DEFAULT: u16 = 1000;
 
 #[derive(Parser, Debug, Clone)]
-#[allow(clippy::struct_excessive_bools)]
 #[command(version, about)]
 pub struct Cli {
     /// The target to scan, accepts IP address or domain name
@@ -163,7 +162,6 @@ impl CliArgs {
 }
 
 #[cfg(test)]
-#[allow(clippy::unwrap_used, clippy::pedantic, clippy::nursery)]
 mod tests {
     use super::{Cli, PortRange};
 
@@ -182,7 +180,7 @@ mod tests {
         assert_eq!(result.min, min);
         assert_eq!(result.max, max);
         assert_eq!(result.range_size, range);
-        assert_eq!(result.get_range(), (min..=max))
+        assert_eq!(result.get_range(), (min..=max));
     }
 
     #[test]
@@ -203,7 +201,7 @@ mod tests {
             all_ports: true,
             concurrent: 1024,
             ip_v6: false,
-            ports: "".to_owned(),
+            ports: String::new(),
             retry: 100,
             timeout: 1000,
         });
