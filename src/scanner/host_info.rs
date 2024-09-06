@@ -59,7 +59,7 @@ impl HostInfo {
     }
 
     #[cfg(test)]
-    pub fn test_get(ips: Vec<IpAddr>) -> Self {
+    pub const fn test_get(ips: Vec<IpAddr>) -> Self {
         Self {
             elapsed: std::time::Duration::from_millis(0),
             ips,

@@ -186,7 +186,7 @@ impl AllPortStatus {
 }
 
 #[cfg(test)]
-#[allow(clippy::unwrap_used)]
+#[expect(clippy::unwrap_used)]
 mod tests {
     use std::{
         collections::HashSet,

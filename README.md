@@ -150,7 +150,7 @@ requires <a href='https://www.docker.com/' target='_blank' rel='noopener norefer
 #### 64bit arm (pi 4, pi zero w 2)
 
 ```shell
-cross build --target aarch64-unknown-linux-musleabihf --release
+cross build --target aarch64-unknown-linux-musl --release
 ```
 
 #### 32bit pi (pi zero w)

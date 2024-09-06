@@ -31,7 +31,6 @@ impl PortDescriptions {
 }
 
 #[cfg(test)]
-#[allow(clippy::unwrap_used, clippy::pedantic, clippy::nursery)]
 pub mod tests {
 
     use crate::port_descriptions::PortDescriptions;
