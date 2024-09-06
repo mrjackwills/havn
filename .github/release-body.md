@@ -1,12 +1,11 @@
-### 2024-07-25
+### 2024-09-06
 
 ### Chores
-+ .devcontainer updated, [d79cbe37053dc1f41ca843e64e75612a369e9978]
-+ dependencies updated, [1809faa95e28daf61330b72333fd97a03a721002]
++ Rust 1.81 linting, [466fd8263cd0b4c2fc2c41d71e706b0984e1f4ce]
++ dependencies updated, [8d5490c8220244326dc653a807615dcc562eab00]
 
-### Fixes
-+ install.sh use curl, [ba6218c7b365bfbf1ce025088e8e26caac017290]
-+ dockerfile lowercase stages, [98e5f72227038d8b5927d458fe524c6d27e21fc2]
+### Docs
++ README.md aarch64 cross build typo, [69df36bad2a284d989c7d232ee6558121931fe2a]
 
 
 see <a href='https://github.com/mrjackwills/havn/blob/main/CHANGELOG.md'>CHANGELOG.md</a> for more details

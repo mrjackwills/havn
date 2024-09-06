@@ -1,9 +1,12 @@
+# <a href='https://github.com/mrjackwills/havn/releases/tag/v0.1.14'>v0.1.14</a>
+### 2024-09-06
+
 ### Chores
-+ Rust 1.81 linting, [466fd8263cd0b4c2fc2c41d71e706b0984e1f4ce]
-+ dependencies updated, [8d5490c8220244326dc653a807615dcc562eab00]
++ Rust 1.81 linting, [466fd826](https://github.com/mrjackwills/havn/commit/466fd8263cd0b4c2fc2c41d71e706b0984e1f4ce)
++ dependencies updated, [8d5490c8](https://github.com/mrjackwills/havn/commit/8d5490c8220244326dc653a807615dcc562eab00)
 
 ### Docs
-+ README.md aarch64 cross build typo, [69df36bad2a284d989c7d232ee6558121931fe2a]
++ README.md aarch64 cross build typo, [69df36ba](https://github.com/mrjackwills/havn/commit/69df36bad2a284d989c7d232ee6558121931fe2a)
 
 # <a href='https://github.com/mrjackwills/havn/releases/tag/v0.1.13'>v0.1.13</a>
 ### 2024-07-25
