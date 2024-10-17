@@ -1,6 +1,3 @@
-// Only allow when debugging
-// #![allow(unused)]
-
 use scanner::{host_info, AllPortStatus};
 use terminal::{print, spinner::Spinner};
 
