@@ -136,7 +136,7 @@ impl CliArgs {
 
 #[cfg(test)]
 impl CliArgs {
-    pub fn test_new(ports: String, concurrent: u16, address: Option<&str>) -> Self {
+    pub fn test_new(ports: String, concurrent: u16, address: Option<&str>, ip_v6: bool) -> Self {
         let cli = Cli {
             address: address.unwrap_or("127.0.0.1").to_owned(),
             all_ports: false,
@@ -145,7 +145,7 @@ impl CliArgs {
             ports,
             retry: 1,
             timeout: 1250,
-            ip_v6: false,
+            ip_v6,
         };
         let port_range = PortRange::from(&cli);
 
