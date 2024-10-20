@@ -8,7 +8,7 @@ pub const PORT_UPPER_DEFAULT: u16 = 1000;
 #[command(version, about)]
 pub struct Cli {
     /// The target to scan, accepts IP address or domain name
-    #[clap(default_value = "127.0.0.1")]
+    #[clap(default_value = "127.0.0.1", default_value_if("ip_v6", "true", "::1"))]
     address: String,
 
     /// Scan all ports, conflicts with "-p".
@@ -137,8 +137,14 @@ impl CliArgs {
 #[cfg(test)]
 impl CliArgs {
     pub fn test_new(ports: String, concurrent: u16, address: Option<&str>, ip_v6: bool) -> Self {
+        let adr = if ip_v6 && address.is_none() {
+            "::1"
+        } else {
+            "127.0.0.1"
+        };
+
         let cli = Cli {
-            address: address.unwrap_or("127.0.0.1").to_owned(),
+            address: address.unwrap_or(adr).to_owned(),
             all_ports: false,
             monochrome: false,
             concurrent,
