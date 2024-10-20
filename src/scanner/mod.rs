@@ -190,7 +190,7 @@ impl AllPortStatus {
 mod tests {
     use std::{
         collections::HashSet,
-        net::{IpAddr, Ipv4Addr},
+        net::{IpAddr, Ipv4Addr, Ipv6Addr},
     };
 
     use warp::Filter;
@@ -200,10 +200,15 @@ mod tests {
         scanner::{AllPortStatus, PortMessage},
     };
 
-    /// Start a server, on a given port, in own thread
+    const V4_LOCAL: IpAddr = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
+    const V6_LOCAL: IpAddr = IpAddr::V6(Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 1));
+
+    /// Start a server, on a given port, in own thread, on both IPv4 and IPv6 interfaces
     async fn start_server(port: u16) {
         let routes = warp::any().map(|| "Test Sever");
-        tokio::spawn(warp::serve(routes).run(([127, 0, 0, 1], port)));
+
+        tokio::spawn(warp::serve(routes).run((V4_LOCAL, port)));
+        tokio::spawn(warp::serve(routes).run((V6_LOCAL, port)));
         tokio::time::sleep(std::time::Duration::from_millis(1)).await;
     }
 
@@ -304,9 +309,8 @@ mod tests {
     #[tokio::test]
     /// Zero ports of 1-1000 open
     async fn test_scanner_1000_empty() {
-        let cli_args = parse_arg::CliArgs::test_new("1-1000".to_owned(), 2048, None);
-        let ip = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
-        let result = AllPortStatus::first_pass(&cli_args, &ip).await;
+        let cli_args = parse_arg::CliArgs::test_new("1-1000".to_owned(), 2048, None, false);
+        let result = AllPortStatus::first_pass(&cli_args, &V4_LOCAL).await;
         assert_eq!(result.closed, 1000);
         assert_eq!(result.open.len(), 0);
     }
@@ -314,9 +318,8 @@ mod tests {
     #[tokio::test]
     /// Scan all ports, due to VSCode some ports might be open
     async fn test_scanner_all() {
-        let cli_args = parse_arg::CliArgs::test_new("1-65535".to_owned(), 2048, None);
-        let ip = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
-        let result = AllPortStatus::first_pass(&cli_args, &ip).await;
+        let cli_args = parse_arg::CliArgs::test_new("1-65535".to_owned(), 2048, None, false);
+        let result = AllPortStatus::first_pass(&cli_args, &V4_LOCAL).await;
         println!("{result:#?}");
         assert_eq!(
             usize::from(result.closed) + usize::from(result.open_len()),
@@ -325,23 +328,35 @@ mod tests {
     }
 
     #[tokio::test]
-    /// Port 80 open, but only scan first 10, so zero response
+    /// Port 80 open, but only scan first 10, so zero response, on both IPv4 and IPv6 interfaces
     async fn test_scanner_10_port_80_empty() {
         start_server(80).await;
-        let cli_args = parse_arg::CliArgs::test_new("1-10".to_owned(), 2048, None);
-        let ip = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
-        let result = AllPortStatus::first_pass(&cli_args, &ip).await;
+        let cli_args = parse_arg::CliArgs::test_new("1-10".to_owned(), 2048, None, false);
+        let result = AllPortStatus::first_pass(&cli_args, &V4_LOCAL).await;
+        assert_eq!(result.closed, 10);
+        assert_eq!(result.open.len(), 0);
+
+        let cli_args = parse_arg::CliArgs::test_new("1-10".to_owned(), 2048, Some("::1"), true);
+        let result = AllPortStatus::first_pass(&cli_args, &V6_LOCAL).await;
         assert_eq!(result.closed, 10);
         assert_eq!(result.open.len(), 0);
     }
 
     #[tokio::test]
-    /// Port 80 open of first 1000
+    /// Port 80 open of first 1000, on both IPv4 and IPv6 interfaces
     async fn test_scanner_port_80() {
         start_server(80).await;
-        let cli_args = parse_arg::CliArgs::test_new("1-1000".to_owned(), 2048, None);
-        let ip = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
-        let result = AllPortStatus::first_pass(&cli_args, &ip).await;
+        let cli_args = parse_arg::CliArgs::test_new("1-1000".to_owned(), 2048, None, false);
+        let result = AllPortStatus::first_pass(&cli_args, &V4_LOCAL).await;
+        assert_eq!(result.closed, 999);
+        assert_eq!(result.open.len(), 1);
+        assert_eq!(
+            usize::from(result.closed) + usize::from(result.open_len()),
+            1000
+        );
+
+        let cli_args = parse_arg::CliArgs::test_new("1-1000".to_owned(), 2048, Some("::1"), true);
+        let result = AllPortStatus::first_pass(&cli_args, &V6_LOCAL).await;
         assert_eq!(result.closed, 999);
         assert_eq!(result.open.len(), 1);
         assert_eq!(
@@ -351,13 +366,21 @@ mod tests {
     }
 
     #[tokio::test]
-    /// Port 80 and 443 open of first 1000
+    /// Port 80 and 443 open of first 1000, on both IPv4 and IPv6 interfaces
     async fn test_scanner_1000_80_443() {
         start_server(80).await;
         start_server(443).await;
-        let cli_args = parse_arg::CliArgs::test_new("1-1000".to_owned(), 2048, None);
-        let ip = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
-        let result = AllPortStatus::first_pass(&cli_args, &ip).await;
+        let cli_args = parse_arg::CliArgs::test_new("1-1000".to_owned(), 2048, None, false);
+        let result = AllPortStatus::first_pass(&cli_args, &V4_LOCAL).await;
+        assert_eq!(result.closed, 998);
+        assert_eq!(result.open.len(), 2);
+        assert_eq!(
+            usize::from(result.closed) + usize::from(result.open_len()),
+            1000
+        );
+
+        let cli_args = parse_arg::CliArgs::test_new("1-1000".to_owned(), 2048, Some("::1"), false);
+        let result = AllPortStatus::first_pass(&cli_args, &V6_LOCAL).await;
         assert_eq!(result.closed, 998);
         assert_eq!(result.open.len(), 2);
         assert_eq!(
@@ -367,12 +390,24 @@ mod tests {
     }
 
     #[tokio::test]
-    /// Scan all ports, at least 2 should be open
+    /// Scan all ports, at least 2 should be open, on both IPv4 and IPv6 interfaces
     async fn test_scanner_all_80() {
         start_server(80).await;
-        let cli_args = parse_arg::CliArgs::test_new("1-65535".to_owned(), 2048, None);
-        let ip = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
-        let result = AllPortStatus::first_pass(&cli_args, &ip).await;
+        let cli_args = parse_arg::CliArgs::test_new("1-65535".to_owned(), 2048, None, false);
+        let result = AllPortStatus::first_pass(&cli_args, &V4_LOCAL).await;
+        assert_eq!(
+            usize::from(result.closed) + usize::from(result.open_len()),
+            65535
+        );
+        // Random ports can be open when developing in VSCode Dev Container, so just check that open ports is minimum 2
+        assert!(result.open.len() >= 2);
+        let result = result.get_all_open();
+        assert!(result.is_some());
+        let result = result.unwrap();
+        assert!(result.contains(&(80, "http")));
+
+        let cli_args = parse_arg::CliArgs::test_new("1-65535".to_owned(), 2048, Some("::1"), false);
+        let result = AllPortStatus::first_pass(&cli_args, &V6_LOCAL).await;
         assert_eq!(
             usize::from(result.closed) + usize::from(result.open_len()),
             65535
