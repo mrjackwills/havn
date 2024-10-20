@@ -1,3 +1,9 @@
+# <a href='https://github.com/mrjackwills/havn/releases/tag/v0.1.16'>v0.1.16</a>
+### 2024-10-20
+
+### Fixes
++ Set default address to `::1` when using IPv6 with no user provided address, [99a5a828](https://github.com/mrjackwills/havn/commit/99a5a82881d302c004f654ea6d431c6bc6cbc727)
+
 # <a href='https://github.com/mrjackwills/havn/releases/tag/v0.1.15'>v0.1.15</a>
 ### 2024-10-20
 
