@@ -1,3 +1,15 @@
+# <a href='https://github.com/mrjackwills/havn/releases/tag/v0.1.17'>v0.1.17</a>
+### 2024-12-03
+
+### Chores
++ dependencies updated, [7d3ba6d9](https://github.com/mrjackwills/havn/commit/7d3ba6d9e0716117ef87e239b6b54e4459cfab75), [fdbee8b9](https://github.com/mrjackwills/havn/commit/fdbee8b900cbd7c97525bb91668eb695f288808f)
+
+### Features
++ use a `Vec<u16>` for ports, and pop from back, [167314a1](https://github.com/mrjackwills/havn/commit/167314a1db209c501abf232de2de47b342fa10ec)
+
+### Fixes
++ Dockerfile build `$BUILDPLATFORM`, [b7f671f9](https://github.com/mrjackwills/havn/commit/b7f671f9ea4ed30a9b7f55ecfcc01203ac1710a5), [1fa363b2](https://github.com/mrjackwills/havn/commit/1fa363b27c8d943326c5c88318b4a8142dedaaaa)
+
 # <a href='https://github.com/mrjackwills/havn/releases/tag/v0.1.16'>v0.1.16</a>
 ### 2024-10-20
 

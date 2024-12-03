@@ -45,10 +45,10 @@ pub mod print {
 
     /// Generate information about the host/address/IP that will be scanned, to be shown on two lines along with the application name
     fn get_host_ip(cli_args: &CliArgs, ip: &IpAddr) -> (String, String, String) {
-        let ports = if cli_args.ports.min == cli_args.ports.max {
-            format!("{}", cli_args.ports.min)
+        let ports = if cli_args.port_range.start == cli_args.port_range.end {
+            format!("{}", cli_args.port_range.start)
         } else {
-            format!("{}-{}", cli_args.ports.min, cli_args.ports.max)
+            format!("{}-{}", cli_args.port_range.start, cli_args.port_range.end)
         };
         if cli_args.address == ip.to_string() {
             (format!("{}:", cli_args.address), ports, String::new())

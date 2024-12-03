@@ -41,7 +41,7 @@ async fn main() {
     let spinner = Spinner::new();
     spinner.start();
     let now = std::time::Instant::now();
-    let scan_output = AllPortStatus::scan_ports(&cli_args, ip).await;
+    let scan_output = AllPortStatus::scan_ports(cli_args, ip).await;
     spinner.stop();
     let done = now.elapsed();
 
