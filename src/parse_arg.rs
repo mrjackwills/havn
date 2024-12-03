@@ -1,6 +1,4 @@
 use clap::Parser;
-// use rand::{seq::SliceRandom, thread_rng};
-
 pub const PORT_UPPER_DEFAULT: u16 = 1000;
 
 #[derive(Parser, Debug, Clone)]
