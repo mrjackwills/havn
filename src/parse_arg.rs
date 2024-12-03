@@ -1,10 +1,10 @@
-use std::ops::RangeInclusive;
-
 use clap::Parser;
+// use rand::{seq::SliceRandom, thread_rng};
 
 pub const PORT_UPPER_DEFAULT: u16 = 1000;
 
 #[derive(Parser, Debug, Clone)]
+#[allow(clippy::struct_excessive_bools)]
 #[command(version, about)]
 pub struct Cli {
     /// The target to scan, accepts IP address or domain name
@@ -46,63 +46,40 @@ pub struct Cli {
     ip_v6: bool,
 }
 
-#[derive(Debug, Clone)]
-pub struct PortRange {
-    pub min: u16,
-    pub max: u16,
-    pub range_size: u16,
-}
-
-impl PortRange {
-    /// Generate an inclusive range, given the min and max port
-    pub const fn get_range(&self) -> RangeInclusive<u16> {
-        self.min..=self.max
-    }
-}
-
-/// Parse port ranges, any parsing errors will return default values
+/// Create a Vec<u16> (aka ports) from the CliArgs.
+/// With a vec, the back is pop'ed, so we reverse the order of the Vec<u16> here, so that it pops from smallest to largest
+/// Can maybe introduce a "shuffle" mode, so scan ports in a random order - although not sure if that would have any benefit, and would require using another dependency
 impl From<&Cli> for PortRange {
     fn from(cli: &Cli) -> Self {
-        if cli.all_ports {
-            Self {
-                min: 1,
-                max: u16::MAX,
-                range_size: u16::MAX,
-            }
+        let (start, end) = if cli.all_ports {
+            (1, u16::MAX)
         } else if cli.ports.contains('-') {
             let (start, end) = cli.ports.split_once('-').unwrap_or_default();
             let start = start.parse::<u16>().unwrap_or(1);
             let end = end.parse::<u16>().unwrap_or(PORT_UPPER_DEFAULT);
-            let range_size = start.abs_diff(end) + 1;
 
             if start <= end {
-                Self {
-                    min: start,
-                    max: end,
-                    range_size,
-                }
+                (start, end)
             } else {
-                Self {
-                    min: end,
-                    max: start,
-                    range_size,
-                }
+                (end, start)
             }
         } else {
-            cli.ports.parse::<u16>().map_or(
-                Self {
-                    min: 1,
-                    max: PORT_UPPER_DEFAULT,
-                    range_size: PORT_UPPER_DEFAULT,
-                },
-                |single_port| Self {
-                    min: single_port,
-                    max: single_port,
-                    range_size: 1,
-                },
-            )
-        }
+            cli.ports
+                .parse::<u16>()
+                .map_or((1, PORT_UPPER_DEFAULT), |i| (i, i))
+        };
+        let mut ports = (start..=end).collect::<Vec<_>>();
+        ports.reverse();
+
+        Self { start, end, ports }
     }
+}
+
+#[derive(Debug, Clone)]
+pub struct PortRange {
+    pub start: u16,
+    pub end: u16,
+    ports: Vec<u16>,
 }
 
 #[derive(Debug, Clone)]
@@ -111,7 +88,7 @@ pub struct CliArgs {
     pub concurrent: u16,
     pub ip6: bool,
     pub monochrome: bool,
-    pub ports: PortRange,
+    pub port_range: PortRange,
     pub retry: u8,
     pub timeout: u32,
 }
@@ -119,17 +96,35 @@ pub struct CliArgs {
 impl CliArgs {
     pub fn new() -> Self {
         let cli = Cli::parse();
-
         let port_range = PortRange::from(&cli);
-
         Self {
             address: cli.address,
             concurrent: cli.concurrent,
             ip6: cli.ip_v6,
             monochrome: cli.monochrome,
-            ports: port_range,
+            port_range,
             retry: cli.retry,
             timeout: cli.timeout,
+        }
+    }
+
+    /// Get the total number of ports to scan
+    pub fn ports_len(&self) -> u16 {
+        u16::try_from(self.port_range.ports.len()).unwrap_or_default()
+    }
+
+    /// Remove the last entry from the ports vec
+    pub fn ports_pop(&mut self) -> Option<u16> {
+        self.port_range.ports.pop()
+    }
+
+    /// Split the ports vec, this can panic if index > ports.len(), hence the check and return of empty vec
+    pub fn ports_split(&mut self) -> Vec<u16> {
+        let concurrent = usize::from(self.concurrent);
+        if self.port_range.ports.len() >= concurrent {
+            self.port_range.ports.split_off(concurrent)
+        } else {
+            vec![]
         }
     }
 }
@@ -146,21 +141,21 @@ impl CliArgs {
         let cli = Cli {
             address: address.unwrap_or(adr).to_owned(),
             all_ports: false,
-            monochrome: false,
             concurrent,
+            ip_v6,
+            monochrome: false,
             ports,
             retry: 1,
             timeout: 1250,
-            ip_v6,
         };
-        let port_range = PortRange::from(&cli);
+        let ports = PortRange::from(&cli);
 
         Self {
             address: cli.address,
             concurrent: cli.concurrent,
-            monochrome: cli.monochrome,
             ip6: cli.ip_v6,
-            ports: port_range,
+            monochrome: cli.monochrome,
+            port_range: ports,
             retry: cli.retry,
             timeout: cli.timeout,
         }
@@ -169,24 +164,26 @@ impl CliArgs {
 
 #[cfg(test)]
 mod tests {
-    use super::{Cli, PortRange};
+    use crate::parse_arg::PortRange;
+
+    use super::Cli;
 
     /// Re-useable test to make sure ports get parsed correctly
     fn test(ports: &str, min: u16, max: u16, range: u16) {
         let result = PortRange::from(&Cli {
-            monochrome: false,
             address: "127.0.0.1".to_owned(),
             all_ports: false,
             concurrent: 1024,
             ip_v6: false,
+            monochrome: false,
             ports: ports.to_owned(),
             retry: 1,
             timeout: 1000,
         });
-        assert_eq!(result.min, min);
-        assert_eq!(result.max, max);
-        assert_eq!(result.range_size, range);
-        assert_eq!(result.get_range(), (min..=max));
+        // We can't assume this is in shuffle mode!
+        assert_eq!(result.start, min);
+        assert_eq!(result.end, max);
+        assert_eq!(result.ports.len(), usize::from(range));
     }
 
     #[test]
@@ -211,8 +208,8 @@ mod tests {
             retry: 100,
             timeout: 1000,
         });
-        assert_eq!(result.min, 1);
-        assert_eq!(result.max, 65535);
-        assert_eq!(result.range_size, 65535);
+        assert_eq!(result.start, 1);
+        assert_eq!(result.end, 65535);
+        assert_eq!(result.ports.len(), 65535);
     }
 }
