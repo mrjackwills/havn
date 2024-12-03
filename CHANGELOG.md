@@ -5,7 +5,7 @@
 + use a `Vec<u16>` for ports, and pop from back, [167314a1db209c501abf232de2de47b342fa10ec]
 
 ### Fixes
-+ Dockerfile build `$BUILDPLATFORM`, [b7f671f9ea4ed30a9b7f55ecfcc01203ac1710a5]
++ Dockerfile build `$BUILDPLATFORM`, [b7f671f9ea4ed30a9b7f55ecfcc01203ac1710a5], [1fa363b27c8d943326c5c88318b4a8142dedaaaa]
 
 # <a href='https://github.com/mrjackwills/havn/releases/tag/v0.1.16'>v0.1.16</a>
 ### 2024-10-20
