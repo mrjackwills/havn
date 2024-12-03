@@ -55,7 +55,7 @@ FROM scratch AS runtime
 ENV HAVN_RUNTIME=container
 
 # Copy application binary from builder image
-COPY --from=BUILDER /havn /app/
+COPY --from=builder /havn /app/
 
 # Run the application
 ENTRYPOINT [ "/app/havn"]
