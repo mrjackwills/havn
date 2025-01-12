@@ -103,7 +103,7 @@ mod tests {
 
         WIN_10.store(true, std::sync::atomic::Ordering::SeqCst);
 
-        assert!(Cursor::Show.to_string().as_bytes().is_empty());
-        assert!(Cursor::Hide.to_string().as_bytes().is_empty());
+        assert!(Cursor::Show.to_string().is_empty());
+        assert!(Cursor::Hide.to_string().is_empty());
     }
 }
