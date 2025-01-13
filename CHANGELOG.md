@@ -1,3 +1,11 @@
+# <a href='https://github.com/mrjackwills/havn/releases/tag/v0.1.18'>v0.1.18</a>
+### 2025-01-13
+
+### Chores
++ dependencies updated, [f7f92e41](https://github.com/mrjackwills/havn/commit/f7f92e413057502470e691187382ec903cb62f5e), [abde533c](https://github.com/mrjackwills/havn/commit/abde533c224eb898eb8c3b51dc3c7daa0b0cd4db)
++ Rust 1.84 linting, [db9773cc](https://github.com/mrjackwills/havn/commit/db9773cc6253a4f1b6293d3c5c2db4bedb66d5c8)
++ add `havn` to `_typos.toml`, [acd2b6f4](https://github.com/mrjackwills/havn/commit/acd2b6f4022549bca874fe65250324fdd363596e)
+
 # <a href='https://github.com/mrjackwills/havn/releases/tag/v0.1.17'>v0.1.17</a>
 ### 2024-12-03
 

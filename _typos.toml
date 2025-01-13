@@ -1,2 +1,5 @@
 [files]
 extend-exclude = ["src/port_descriptions/*.txt"]
+
+[default.extend-words]
+havn = "havn"
