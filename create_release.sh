@@ -230,6 +230,41 @@ cargo_build_all() {
 	cargo_build_x86_windows
 }
 
+# build container for amd64 platform
+build_container_amd64() {
+	docker image rm havn_amd64:latest
+	docker builder prune -a
+	echo -e "${YELLOW}docker build  --platform linux/amd64 -t havn_amd64 -f containerised/Dockerfile .; docker save -o /tmp/havn_amd64.tar havn_amd64${RESET}"
+	docker build --platform linux/amd64 -t havn_amd64 -f containerised/Dockerfile .
+	docker save -o /tmp/havn_amd64.tar havn_amd64
+}
+# build container for aarm64 platform
+build_container_arm64() {
+	docker image rm havn_arm64:latest
+	docker builder prune -a
+	echo -e "${YELLOW}docker build  --platform linux/arm64 -t havn_arm64 -f containerised/Dockerfile .; docker save -o /tmp/havn_arm64.tar havn_arm64${RESET}"
+	docker build --platform linux/arm64 -t havn_arm64 -f containerised/Dockerfile .
+	docker save -o /tmp/havn_arm64.tar havn_arm64
+}
+# build container for armv6 platform
+build_container_armv6() {
+	docker image rm havn_armv6:latest
+	docker builder prune -a
+	echo -e "${YELLOW}docker build  --platform linux/arm/v6 -t havn_armv6 -f containerised/Dockerfile .; docker save -o /tmp/havn_armv6.tar havn_armv6${RESET}"
+	docker build --platform linux/arm/v6 -t havn_armv6 -f containerised/Dockerfile .
+	docker save -o /tmp/havn_armv6.tar havn_armv6
+}
+
+
+# Build all the containers, this get executed in the github action
+build_container_all() {
+	build_container_amd64
+	ask_continue
+	build_container_arm64
+	ask_continue
+	build_container_armv6
+}
+
 # $1 text to colourise
 release_continue() {
 	echo -e "\n${PURPLE}$1${RESET}"
@@ -266,6 +301,7 @@ release_flow() {
 
 	cargo_test
 	cargo_build_all
+	build_container_all
 	cargo_publish
 
 	cd "${CWD}" || error_close "Can't find ${CWD}"
@@ -369,12 +405,54 @@ build_choice() {
 	done
 }
 
+build_container_choice() {
+	cmd=(dialog --backtitle "Choose option" --radiolist "choose" 14 80 16)
+	options=(
+		1 "x86 " off
+		2 "aarch64" off
+		3 "armv6" off
+		4 "all" off
+	)
+	choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+	exitStatus=$?
+	clear
+	if [ $exitStatus -ne 0 ]; then
+		exit
+	fi
+	for choice in $choices; do
+		case $choice in
+		0)
+			exit
+			;;
+		1)
+			build_container_amd64
+			exit
+			;;
+		2)
+			build_container_arm64
+			exit
+			;;
+		3)
+			build_container_armv6
+			exit
+			;;
+		4)
+			build_container_all
+			exit
+			;;
+		esac
+	done
+
+}
+
+
 main() {
 	cmd=(dialog --backtitle "Choose option" --radiolist "choose" 14 80 16)
 	options=(
 		1 "test" off
 		2 "release" off
 		3 "build" off
+		4 "docker builds" off
 	)
 	choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 	exitStatus=$?
@@ -398,6 +476,11 @@ main() {
 			;;
 		3)
 			build_choice
+			main
+			break
+			;;
+		4)
+			build_container_choice
 			main
 			break
 			;;
