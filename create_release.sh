@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# rust create_release
-# v0.6.0
+# rust create_release v0.6.2
+# 2025-02-22
+
 
 STAR_LINE='****************************************'
 CWD=$(pwd)
@@ -232,26 +233,20 @@ cargo_build_all() {
 
 # build container for amd64 platform
 build_container_amd64() {
-	docker image rm havn_amd64:latest
-	docker builder prune -a
-	echo -e "${YELLOW}docker build  --platform linux/amd64 -t havn_amd64 -f containerised/Dockerfile .; docker save -o /tmp/havn_amd64.tar havn_amd64${RESET}"
-	docker build --platform linux/amd64 -t havn_amd64 -f containerised/Dockerfile .
+	echo -e "${YELLOW}docker build  --platform linux/amd64 --no-cache -t havn_amd64 -f containerised/Dockerfile .; docker save -o /tmp/havn_amd64.tar havn_amd64${RESET}"
+	docker build --platform linux/amd64 -t havn_amd64 --no-cache -f containerised/Dockerfile .
 	docker save -o /tmp/havn_amd64.tar havn_amd64
 }
 # build container for aarm64 platform
 build_container_arm64() {
-	docker image rm havn_arm64:latest
-	docker builder prune -a
-	echo -e "${YELLOW}docker build  --platform linux/arm64 -t havn_arm64 -f containerised/Dockerfile .; docker save -o /tmp/havn_arm64.tar havn_arm64${RESET}"
-	docker build --platform linux/arm64 -t havn_arm64 -f containerised/Dockerfile .
+	echo -e "${YELLOW}docker build  --platform linux/arm64 --no-cache -t havn_arm64 -f containerised/Dockerfile .; docker save -o /tmp/havn_arm64.tar havn_arm64${RESET}"
+	docker build --platform linux/arm64 -t havn_arm64 --no-cache -f containerised/Dockerfile .
 	docker save -o /tmp/havn_arm64.tar havn_arm64
 }
 # build container for armv6 platform
 build_container_armv6() {
-	docker image rm havn_armv6:latest
-	docker builder prune -a
-	echo -e "${YELLOW}docker build  --platform linux/arm/v6 -t havn_armv6 -f containerised/Dockerfile .; docker save -o /tmp/havn_armv6.tar havn_armv6${RESET}"
-	docker build --platform linux/arm/v6 -t havn_armv6 -f containerised/Dockerfile .
+	echo -e "${YELLOW}docker build  --platform linux/arm/v6 --no-cache -t havn_armv6 -f containerised/Dockerfile .; docker save -o /tmp/havn_armv6.tar havn_armv6${RESET}"
+	docker build --platform linux/arm/v6 -t havn_armv6 --no-cache -f containerised/Dockerfile .
 	docker save -o /tmp/havn_armv6.tar havn_armv6
 }
 
