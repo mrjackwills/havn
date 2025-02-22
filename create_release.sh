@@ -195,24 +195,28 @@ check_cross() {
 	fi
 }
 
+# Build, using cross-rs, for linux x86 musl
 cargo_build_x86_linux() {
 	check_cross
 	echo -e "${YELLOW}cross build --target x86_64-unknown-linux-musl --release${RESET}"
 	cross build --target x86_64-unknown-linux-musl --release
 }
 
+# Build, using cross-rs, for linux armv6 musl
 cargo_build_armv6_linux() {
 	check_cross
 	echo -e "${YELLOW}cross build --target arm-unknown-linux-musleabihf --release${RESET}"
 	cross build --target arm-unknown-linux-musleabihf --release
 }
 
+# Build, using cross-rs, for linux arm64 musl
 cargo_build_aarch64_linux() {
 	check_cross
 	echo -e "${YELLOW}cross build --target aarch64-unknown-linux-musl --release${RESET}"
 	cross build --target aarch64-unknown-linux-musl --release
 }
 
+# Build, using cross-rs, for windows x86
 cargo_build_x86_windows() {
 	check_cross
 	echo -e "${YELLOW}cross build --target x86_64-pc-windows-gnu --release${RESET}"
