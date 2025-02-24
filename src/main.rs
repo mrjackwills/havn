@@ -1,4 +1,4 @@
-use scanner::{host_info, AllPortStatus};
+use scanner::{AllPortStatus, host_info};
 use terminal::{print, spinner::Spinner};
 
 mod parse_arg;

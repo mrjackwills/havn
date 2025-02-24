@@ -1,7 +1,7 @@
 use std::{
     fmt,
     io::Write,
-    sync::{atomic::AtomicBool, Arc},
+    sync::{Arc, atomic::AtomicBool},
 };
 
 use crate::terminal::color::Color;

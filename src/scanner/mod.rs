@@ -85,21 +85,26 @@ impl AllPortStatus {
         counter: u8,
     ) -> Pin<Box<dyn Future<Output = ()> + Send>> {
         Box::pin(async move {
-            if let Ok(Ok(_)) = tokio::time::timeout(
+            match tokio::time::timeout(
                 std::time::Duration::from_millis(u64::from(timeout)),
                 TcpStream::connect(format!("{ip}:{port}")),
             )
             .await
             {
-                // Should one try to actually write to the port?
-                // let open = stream.try_write(&[0]).is_ok();
-                if sx.send(PortMessage { port, open: true }).await.is_err() {
-                    exit(1);
-                };
-            } else if counter > 1 {
-                Self::scan_port(port, ip, timeout, sx, counter - 1).await;
-            } else if sx.send(PortMessage { port, open: false }).await.is_err() {
-                exit(1);
+                Ok(Ok(_)) => {
+                    // Should one try to actually write to the port?
+                    // let open = stream.try_write(&[0]).is_ok();
+                    if sx.send(PortMessage { port, open: true }).await.is_err() {
+                        exit(1);
+                    };
+                }
+                _ => {
+                    if counter > 1 {
+                        Self::scan_port(port, ip, timeout, sx, counter - 1).await;
+                    } else if sx.send(PortMessage { port, open: false }).await.is_err() {
+                        exit(1);
+                    }
+                }
             };
         })
     }

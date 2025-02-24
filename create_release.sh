@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# rust create_release
-# v0.6.0
+# rust create_release v0.6.2
+# 2025-02-22
+
 
 STAR_LINE='****************************************'
 CWD=$(pwd)
@@ -194,24 +195,28 @@ check_cross() {
 	fi
 }
 
+# Build, using cross-rs, for linux x86 musl
 cargo_build_x86_linux() {
 	check_cross
 	echo -e "${YELLOW}cross build --target x86_64-unknown-linux-musl --release${RESET}"
 	cross build --target x86_64-unknown-linux-musl --release
 }
 
+# Build, using cross-rs, for linux armv6 musl
 cargo_build_armv6_linux() {
 	check_cross
 	echo -e "${YELLOW}cross build --target arm-unknown-linux-musleabihf --release${RESET}"
 	cross build --target arm-unknown-linux-musleabihf --release
 }
 
+# Build, using cross-rs, for linux arm64 musl
 cargo_build_aarch64_linux() {
 	check_cross
 	echo -e "${YELLOW}cross build --target aarch64-unknown-linux-musl --release${RESET}"
 	cross build --target aarch64-unknown-linux-musl --release
 }
 
+# Build, using cross-rs, for windows x86
 cargo_build_x86_windows() {
 	check_cross
 	echo -e "${YELLOW}cross build --target x86_64-pc-windows-gnu --release${RESET}"
@@ -228,6 +233,35 @@ cargo_build_all() {
 	cargo_build_x86_linux
 	ask_continue
 	cargo_build_x86_windows
+}
+
+# build container for amd64 platform
+build_container_amd64() {
+	echo -e "${YELLOW}docker build  --platform linux/amd64 --no-cache -t havn_amd64 -f containerised/Dockerfile .; docker save -o /tmp/havn_amd64.tar havn_amd64${RESET}"
+	docker build --platform linux/amd64 -t havn_amd64 --no-cache -f containerised/Dockerfile .
+	docker save -o /tmp/havn_amd64.tar havn_amd64
+}
+# build container for aarm64 platform
+build_container_arm64() {
+	echo -e "${YELLOW}docker build  --platform linux/arm64 --no-cache -t havn_arm64 -f containerised/Dockerfile .; docker save -o /tmp/havn_arm64.tar havn_arm64${RESET}"
+	docker build --platform linux/arm64 -t havn_arm64 --no-cache -f containerised/Dockerfile .
+	docker save -o /tmp/havn_arm64.tar havn_arm64
+}
+# build container for armv6 platform
+build_container_armv6() {
+	echo -e "${YELLOW}docker build  --platform linux/arm/v6 --no-cache -t havn_armv6 -f containerised/Dockerfile .; docker save -o /tmp/havn_armv6.tar havn_armv6${RESET}"
+	docker build --platform linux/arm/v6 -t havn_armv6 --no-cache -f containerised/Dockerfile .
+	docker save -o /tmp/havn_armv6.tar havn_armv6
+}
+
+
+# Build all the containers, this get executed in the github action
+build_container_all() {
+	build_container_amd64
+	ask_continue
+	build_container_arm64
+	ask_continue
+	build_container_armv6
 }
 
 # $1 text to colourise
@@ -266,6 +300,7 @@ release_flow() {
 
 	cargo_test
 	cargo_build_all
+	build_container_all
 	cargo_publish
 
 	cd "${CWD}" || error_close "Can't find ${CWD}"
@@ -369,12 +404,54 @@ build_choice() {
 	done
 }
 
+build_container_choice() {
+	cmd=(dialog --backtitle "Choose option" --radiolist "choose" 14 80 16)
+	options=(
+		1 "x86 " off
+		2 "aarch64" off
+		3 "armv6" off
+		4 "all" off
+	)
+	choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+	exitStatus=$?
+	clear
+	if [ $exitStatus -ne 0 ]; then
+		exit
+	fi
+	for choice in $choices; do
+		case $choice in
+		0)
+			exit
+			;;
+		1)
+			build_container_amd64
+			exit
+			;;
+		2)
+			build_container_arm64
+			exit
+			;;
+		3)
+			build_container_armv6
+			exit
+			;;
+		4)
+			build_container_all
+			exit
+			;;
+		esac
+	done
+
+}
+
+
 main() {
 	cmd=(dialog --backtitle "Choose option" --radiolist "choose" 14 80 16)
 	options=(
 		1 "test" off
 		2 "release" off
 		3 "build" off
+		4 "docker builds" off
 	)
 	choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 	exitStatus=$?
@@ -398,6 +475,11 @@ main() {
 			;;
 		3)
 			build_choice
+			main
+			break
+			;;
+		4)
+			build_container_choice
 			main
 			break
 			;;
