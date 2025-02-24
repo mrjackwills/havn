@@ -93,7 +93,7 @@ jobs:
   # Build images for Dockerhub & ghcr.io #
   ########################################
 
-  image_build:
+  container_image_build:
     needs: [create_release]
     runs-on: ubuntu-latest
     steps:
@@ -140,7 +140,7 @@ jobs:
   # THis could be moved to before a github release is made
   dry_run_cargo_publish:
     runs-on: ubuntu-latest
-    needs: [create_release]
+    needs: [container_image_build]
     steps:
       - name: update rust stable
         run: rustup update stable
