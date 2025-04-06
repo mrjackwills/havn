@@ -96,7 +96,7 @@ impl AllPortStatus {
                     // let open = stream.try_write(&[0]).is_ok();
                     if sx.send(PortMessage { port, open: true }).await.is_err() {
                         exit(1);
-                    };
+                    }
                 }
                 _ => {
                     if counter > 1 {
@@ -105,7 +105,7 @@ impl AllPortStatus {
                         exit(1);
                     }
                 }
-            };
+            }
         })
     }
 
