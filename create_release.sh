@@ -241,19 +241,20 @@ build_container_amd64() {
 	docker build --platform linux/amd64 -t havn_amd64 --no-cache -f containerised/Dockerfile .
 	docker save -o /tmp/havn_amd64.tar havn_amd64
 }
+
 # build container for aarm64 platform
 build_container_arm64() {
 	echo -e "${YELLOW}docker build  --platform linux/arm64 --no-cache -t havn_arm64 -f containerised/Dockerfile .; docker save -o /tmp/havn_arm64.tar havn_arm64${RESET}"
 	docker build --platform linux/arm64 -t havn_arm64 --no-cache -f containerised/Dockerfile .
 	docker save -o /tmp/havn_arm64.tar havn_arm64
 }
+
 # build container for armv6 platform
 build_container_armv6() {
 	echo -e "${YELLOW}docker build  --platform linux/arm/v6 --no-cache -t havn_armv6 -f containerised/Dockerfile .; docker save -o /tmp/havn_armv6.tar havn_armv6${RESET}"
 	docker build --platform linux/arm/v6 -t havn_armv6 --no-cache -f containerised/Dockerfile .
 	docker save -o /tmp/havn_armv6.tar havn_armv6
 }
-
 
 # Build all the containers, this get executed in the github action
 build_container_all() {

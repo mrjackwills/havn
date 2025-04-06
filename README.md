@@ -39,15 +39,15 @@ pacman -S havn
 Published on <a href='https://hub.docker.com/r/mrjackwills/havn' target='_blank' rel='noopener noreferrer'>Docker Hub</a> and <a href='https://ghcr.io/mrjackwills/havn' target='_blank' rel='noopener noreferrer'>ghcr.io</a>,
 with images built for `linux/amd64`, `linux/arm64`, and `linux/arm/v6`
 
-**via Docker Hub**
-```shell
-docker run --rm -it mrjackwills/havn:latest #[options]
-```
-
 **via ghcr.io**
 
 ```shell
 docker run --rm -it ghcr.io/mrjackwills/havn:latest #[options]
+```
+
+**via Docker Hub**
+```shell
+docker run --rm -it mrjackwills/havn:latest #[options]
 ```
 
 ❗Caution: To scan the Docker host itself, you must grant access by including the option:

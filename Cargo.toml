@@ -1,6 +1,6 @@
 [package]
 name = "havn"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2024"
 authors = ["Jack Wills <email@mrjackwills.com>"]
 description = "A fast configurable port scanner with reasonable defaults"
@@ -29,7 +29,7 @@ similar_names = "allow"
 
 [dependencies]
 clap = { version = "4.5", features = ["color", "derive", "unicode"] }
-tokio = { version = "1.43", features = [
+tokio = { version = "1.44", features = [
 	"macros",
 	"net",
 	"parking_lot",

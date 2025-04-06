@@ -4,7 +4,7 @@ pub mod spinner;
 pub use color::text_color;
 
 pub mod print {
-    use std::net::IpAddr;
+    use std::{fmt::Write, net::IpAddr};
 
     use crate::{
         exit,
@@ -35,7 +35,7 @@ pub mod print {
                 .enumerate()
                 .for_each(|(index, i)| {
                     let prefix = if index > 0 { ", " } else { "" };
-                    output.push_str(&format!("{prefix}{i}"));
+                    write!(&mut output, "{prefix}{i}").ok();
                 });
             Some(output)
         } else {
@@ -85,7 +85,7 @@ pub mod print {
                 } else {
                     Color::Reset
                 };
-                output.push_str(&format!("\n{}{port:<5} {desc}{}", color, Color::Reset));
+                write!(&mut output, "\n{}{port:<5} {desc}{}", color, Color::Reset).ok();
             }
             output
         })
