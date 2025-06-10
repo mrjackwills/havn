@@ -42,6 +42,10 @@ pub struct Cli {
     /// Enable IPv6 scanning. Defaults to IPv4.
     #[clap(short = '6', default_value_t = false)]
     ip_v6: bool,
+
+    /// Enable verbose debugging.
+    #[clap(long = "verbose", default_value_t = false)]
+    verbose: bool,
 }
 
 /// Create a Vec<u16> (aka ports) from the CliArgs.
@@ -66,10 +70,12 @@ impl From<&Cli> for PortRange {
                 .parse::<u16>()
                 .map_or((1, PORT_UPPER_DEFAULT), |i| (i, i))
         };
-        let mut ports = (start..=end).collect::<Vec<_>>();
-        ports.reverse();
 
-        Self { start, end, ports }
+        Self {
+            start,
+            end,
+            ports: (start..=end).collect::<Vec<_>>(),
+        }
     }
 }
 
@@ -89,6 +95,7 @@ pub struct CliArgs {
     pub port_range: PortRange,
     pub retry: u8,
     pub timeout: u32,
+    pub verbose: Option<()>,
 }
 
 impl CliArgs {
@@ -103,6 +110,7 @@ impl CliArgs {
             port_range,
             retry: cli.retry,
             timeout: cli.timeout,
+            verbose: if cli.verbose { Some(()) } else { None },
         }
     }
 
@@ -117,10 +125,14 @@ impl CliArgs {
     }
 
     /// Split the ports vec, this can panic if index > ports.len(), hence the check and return of empty vec
+    /// Reverse the original and split vecs, so can pop off in order
     pub fn ports_split(&mut self) -> Vec<u16> {
         let concurrent = usize::from(self.concurrent);
         if self.port_range.ports.len() >= concurrent {
-            self.port_range.ports.split_off(concurrent)
+            let mut output = self.port_range.ports.split_off(concurrent);
+            output.reverse();
+            self.port_range.ports.reverse();
+            output
         } else {
             vec![]
         }
@@ -145,6 +157,7 @@ impl CliArgs {
             ports,
             retry: 1,
             timeout: 1250,
+            verbose: false,
         };
         let ports = PortRange::from(&cli);
 
@@ -156,6 +169,7 @@ impl CliArgs {
             port_range: ports,
             retry: cli.retry,
             timeout: cli.timeout,
+            verbose: None,
         }
     }
 }
@@ -177,6 +191,7 @@ mod tests {
             ports: ports.to_owned(),
             retry: 1,
             timeout: 1000,
+            verbose: false,
         });
         // We can't assume this is in shuffle mode!
         assert_eq!(result.start, min);
@@ -205,6 +220,7 @@ mod tests {
             ports: String::new(),
             retry: 100,
             timeout: 1000,
+            verbose: false,
         });
         assert_eq!(result.start, 1);
         assert_eq!(result.end, 65535);
