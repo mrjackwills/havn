@@ -54,7 +54,7 @@ impl HostInfo {
     }
 
     /// Get length of the ips vec
-    pub fn ip_len(&self) -> usize {
+    pub const fn ip_len(&self) -> usize {
         self.ips.len()
     }
 
