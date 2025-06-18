@@ -66,10 +66,12 @@ impl From<&Cli> for PortRange {
                 .parse::<u16>()
                 .map_or((1, PORT_UPPER_DEFAULT), |i| (i, i))
         };
-        let mut ports = (start..=end).collect::<Vec<_>>();
-        ports.reverse();
 
-        Self { start, end, ports }
+        Self {
+            start,
+            end,
+            ports: (start..=end).collect::<Vec<_>>(),
+        }
     }
 }
 
@@ -117,10 +119,14 @@ impl CliArgs {
     }
 
     /// Split the ports vec, this can panic if index > ports.len(), hence the check and return of empty vec
+    /// Reverse the original and split vecs, so can pop off in order
     pub fn ports_split(&mut self) -> Vec<u16> {
         let concurrent = usize::from(self.concurrent);
         if self.port_range.ports.len() >= concurrent {
-            self.port_range.ports.split_off(concurrent)
+            let mut output = self.port_range.ports.split_off(concurrent);
+            output.reverse();
+            self.port_range.ports.reverse();
+            output
         } else {
             vec![]
         }
