@@ -34,6 +34,14 @@ cargo install havn
 pacman -S havn
 ```
 
+### X-CMD
+
+If you're an [x-cmd](https://x-cmd.com/install/havn) user, you can install it with the following command:
+
+```shell
+x install havn
+```
+
 ### Docker
 
 Published on <a href='https://hub.docker.com/r/mrjackwills/havn' target='_blank' rel='noopener noreferrer'>Docker Hub</a> and <a href='https://ghcr.io/mrjackwills/havn' target='_blank' rel='noopener noreferrer'>ghcr.io</a>,
