@@ -318,7 +318,7 @@ checksum = "9229cfe53dfd69f0609a49f65461bd93001ea1ef889cd5529dd176593f5338a1"
 
 [[package]]
 name = "havn"
-version = "0.2.1"
+version = "0.3.0"
 dependencies = [
  "clap",
  "os_info",
