@@ -1,3 +1,11 @@
+### Chores
++ Rust 1.87.0 linting, [c5aaca91df7ba130fd192bff2e754d5f3c486c96]
++ dependencies updated, [92a43279286d2807e8ca65241997317f229f0b70]
++ : .devcontainer updated, [8bb58c94ff1c669df8dc77202b2c9b3eb4519a4c]
+
+### Features
++ verbose mode, [e3c58e6e70c1c94c76d2fea05503ef5e13c73c42]
+
 # <a href='https://github.com/mrjackwills/havn/releases/tag/v0.2.1'>v0.2.1</a>
 ### 2025-04-06
 
