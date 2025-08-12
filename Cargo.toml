@@ -1,6 +1,6 @@
 [package]
 name = "havn"
-version = "0.2.1"
+version = "0.3.0"
 edition = "2024"
 authors = ["Jack Wills <email@mrjackwills.com>"]
 description = "A fast configurable port scanner with reasonable defaults"
@@ -29,7 +29,7 @@ similar_names = "allow"
 
 [dependencies]
 clap = { version = "4.5", features = ["color", "derive", "unicode"] }
-tokio = { version = "1.44", features = [
+tokio = { version = "1.47", features = [
 	"macros",
 	"net",
 	"parking_lot",
@@ -41,10 +41,10 @@ tokio = { version = "1.44", features = [
 ] }
 
 [target.'cfg(windows)'.dependencies]
-os_info = "3.10"
+os_info = "3.12"
 
 [dev-dependencies]
-warp = "0.3"
+warp = { version = "0.4", features = ["server"] }
 
 [profile.release]
 lto = true

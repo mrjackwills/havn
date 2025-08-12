@@ -49,12 +49,12 @@ impl HostInfo {
     }
 
     /// Get all the IPs into an iter
-    pub fn iter_ip(&self) -> Iter<IpAddr> {
+    pub fn iter_ip(&'_ self) -> Iter<'_, IpAddr> {
         self.ips.iter()
     }
 
     /// Get length of the ips vec
-    pub fn ip_len(&self) -> usize {
+    pub const fn ip_len(&self) -> usize {
         self.ips.len()
     }
 

@@ -91,6 +91,7 @@ Available command line arguments
 |```-r [number]```			| Retry attempts per port. [default: `1`] |
 |```-t [number]```			| Timeout for each request in milliseconds. [default: `2000`] |
 |```-6```					| Scan the IPv6 address instead of IPv4, [default: `false`] |
+|```--verbose```			| Display simple verbose information when scanning|
 
 ### Examples
 
@@ -117,11 +118,11 @@ havn www.bbc.com -p 443 -r 6
 
 ### Todo
 
+- [x] debug option to display more verbose output
 - [ ] Scan UDP ports, currently only TCP
 - [ ] allow multiple addresses/IPs to be scanned
 - [ ] monitor response times to automatically modify request settings
 - [ ] configurable option to disable second-pass scan
-- [ ] debug option to display more verbose output
 - [ ] improve windows performance
 - [ ] publish to npm
 
