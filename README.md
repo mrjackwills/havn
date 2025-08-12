@@ -91,7 +91,7 @@ Available command line arguments
 |```-r [number]```			| Retry attempts per port. [default: `1`] |
 |```-t [number]```			| Timeout for each request in milliseconds. [default: `2000`] |
 |```-6```					| Scan the IPv6 address instead of IPv4, [default: `false`] |
-|```--verbose``` 			| Display simple verbose information when scanning|
+|```--verbose```			| Display simple verbose information when scanning|
 
 ### Examples
 
