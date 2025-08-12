@@ -78,53 +78,82 @@ impl AllPortStatus {
     /// Scan the given port, will be recursive if counter > 1
     /// Should this be changed to an async fn that just uses a while loop, instead of Box::pin recursion?
     fn scan_port(
-        port: u16,
-        ip: IpAddr,
-        timeout: u32,
-        sx: Sender<PortMessage>,
         counter: u8,
+        ip: IpAddr,
+        port: u16,
+        sx: Sender<PortMessage>,
+        timeout: u32,
+        verbose: Option<u8>,
     ) -> Pin<Box<dyn Future<Output = ()> + Send>> {
+        let now = std::time::Instant::now();
+
+        // Print some information when in verbose mode
+        let verbose_print_open = move |status: bool| {
+            if let Some(verbose) = verbose {
+                println!(
+                    "port: {port:>5}, attempt: #{attempt:>2}, status: {status:>6}, time: {ms:>4} ms",
+                    attempt = verbose - counter + 1,
+                    ms = now.elapsed().as_millis(),
+                    status = if status { "open" } else { "closed" }
+                );
+            }
+        };
+
         Box::pin(async move {
-            match tokio::time::timeout(
+            if let Ok(Ok(_)) = tokio::time::timeout(
                 std::time::Duration::from_millis(u64::from(timeout)),
                 TcpStream::connect(format!("{ip}:{port}")),
             )
             .await
             {
-                Ok(Ok(_)) => {
-                    // Should one try to actually write to the port?
-                    // let open = stream.try_write(&[0]).is_ok();
-                    if sx.send(PortMessage { port, open: true }).await.is_err() {
-                        exit(1);
-                    }
+                verbose_print_open(true);
+                // Should one try to actually write to the port?
+                // let open = stream.try_write(&[0]).is_ok();
+                if sx.send(PortMessage { port, open: true }).await.is_err() {
+                    exit(1);
                 }
-                _ => {
-                    if counter > 1 {
-                        Self::scan_port(port, ip, timeout, sx, counter - 1).await;
-                    } else if sx.send(PortMessage { port, open: false }).await.is_err() {
-                        exit(1);
-                    }
+            } else {
+                verbose_print_open(false);
+                if counter > 0 {
+                    Self::scan_port(counter - 1, ip, port, sx, timeout, verbose).await;
+                } else if sx.send(PortMessage { port, open: false }).await.is_err() {
+                    exit(1);
                 }
             }
         })
     }
 
     /// Spawn a port scan into its own thread
-    fn spawn_scan_port(port: u16, ip: IpAddr, timeout: u32, sx: Sender<PortMessage>, counter: u8) {
-        tokio::spawn(Self::scan_port(port, ip, timeout, sx, counter));
+    fn spawn_scan_port(
+        // max_counter: u8
+        // then verbose is max_counter - counter
+        counter: u8,
+        ip: IpAddr,
+        port: u16,
+        sx: Sender<PortMessage>,
+        timeout: u32,
+        verbose: Option<u8>,
+    ) {
+        tokio::spawn(Self::scan_port(counter, ip, port, sx, timeout, verbose));
     }
 
     /// Scan the entire range of selected ports by initiating multiple concurrent requests simultaneously
     async fn first_pass(cli_args: &mut CliArgs, ip: &IpAddr) -> Self {
         let mut first_pass = Self::new(cli_args);
-        let retry = cli_args.retry + 1;
+        let counter = cli_args.retry;
 
         let (sx, mut rx) = tokio::sync::mpsc::channel(usize::from(cli_args.concurrent));
 
         let mut to_spawn = cli_args.ports_split();
 
+        let verbose = if cli_args.verbose.is_some() {
+            Some(counter)
+        } else {
+            None
+        };
+
         while let Some(port) = cli_args.ports_pop() {
-            Self::spawn_scan_port(port, *ip, cli_args.timeout, sx.clone(), retry);
+            Self::spawn_scan_port(counter, *ip, port, sx.clone(), cli_args.timeout, verbose);
         }
 
         while let Some(message) = rx.recv().await {
@@ -135,8 +164,9 @@ impl AllPortStatus {
                 rx.close();
             }
 
-            if let Some(new_port) = to_spawn.pop() {
-                Self::spawn_scan_port(new_port, *ip, cli_args.timeout, sx.clone(), retry);
+            if let Some(port) = to_spawn.pop() {
+                Self::spawn_scan_port(counter, *ip, port, sx.clone(), cli_args.timeout, verbose);
+                // Self::spawn_scan_port(port, *ip, cli_args.timeout, sx.clone(), counter);
             }
         }
         first_pass
@@ -146,8 +176,22 @@ impl AllPortStatus {
     async fn second_pass(first_pass: Self, cli_args: CliArgs, ip: &IpAddr) -> Self {
         let mut validated_result = Self::from(&first_pass);
         let (sx, mut rx) = tokio::sync::mpsc::channel(first_pass.open.len());
+        let verbose = if cli_args.verbose.is_some() {
+            Some(cli_args.retry)
+        } else {
+            None
+        };
+
         for port in &first_pass.open {
-            Self::scan_port(*port, *ip, cli_args.timeout, sx.clone(), cli_args.retry + 1).await;
+            Self::scan_port(
+                cli_args.retry,
+                *ip,
+                *port,
+                sx.clone(),
+                cli_args.timeout,
+                verbose,
+            )
+            .await;
         }
         drop(sx);
         while let Some(message) = rx.recv().await {
@@ -199,8 +243,8 @@ mod tests {
         scanner::{AllPortStatus, PortMessage},
     };
 
-    const V4_LOCAL: IpAddr = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
-    const V6_LOCAL: IpAddr = IpAddr::V6(Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 1));
+    const V4_LOCAL: IpAddr = IpAddr::V4(Ipv4Addr::LOCALHOST);
+    const V6_LOCAL: IpAddr = IpAddr::V6(Ipv6Addr::LOCALHOST);
 
     /// Start a server, on a given port, in own thread, on both IPv4 and IPv6 interfaces
     async fn start_server(port: u16) {
@@ -407,3 +451,5 @@ mod tests {
         assert!(result.contains(&(80, "http")));
     }
 }
+
+// TODO test ports_split, is order, and split correctly, use a 100 spit 10, 100 spit 1, and 1000 split 10

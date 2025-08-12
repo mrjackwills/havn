@@ -42,6 +42,10 @@ pub struct Cli {
     /// Enable IPv6 scanning. Defaults to IPv4.
     #[clap(short = '6', default_value_t = false)]
     ip_v6: bool,
+
+    /// Enable verbose debugging.
+    #[clap(long = "verbose", default_value_t = false)]
+    verbose: bool,
 }
 
 /// Create a Vec<u16> (aka ports) from the CliArgs.
@@ -91,6 +95,7 @@ pub struct CliArgs {
     pub port_range: PortRange,
     pub retry: u8,
     pub timeout: u32,
+    pub verbose: Option<()>,
 }
 
 impl CliArgs {
@@ -105,6 +110,7 @@ impl CliArgs {
             port_range,
             retry: cli.retry,
             timeout: cli.timeout,
+            verbose: if cli.verbose { Some(()) } else { None },
         }
     }
 
@@ -151,6 +157,7 @@ impl CliArgs {
             ports,
             retry: 1,
             timeout: 1250,
+            verbose: false,
         };
         let ports = PortRange::from(&cli);
 
@@ -162,6 +169,7 @@ impl CliArgs {
             port_range: ports,
             retry: cli.retry,
             timeout: cli.timeout,
+            verbose: None,
         }
     }
 }
@@ -183,6 +191,7 @@ mod tests {
             ports: ports.to_owned(),
             retry: 1,
             timeout: 1000,
+            verbose: false,
         });
         // We can't assume this is in shuffle mode!
         assert_eq!(result.start, min);
@@ -211,6 +220,7 @@ mod tests {
             ports: String::new(),
             retry: 100,
             timeout: 1000,
+            verbose: false,
         });
         assert_eq!(result.start, 1);
         assert_eq!(result.end, 65535);

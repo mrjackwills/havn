@@ -175,12 +175,12 @@ pub mod print {
         #[test]
         /// Generate extra ip function will either return None, or a String in format "Other IPs: xx"
         fn test_terminal_generate_extra_ips() {
-            let ip = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
+            let ip = IpAddr::V4(Ipv4Addr::LOCALHOST);
             let ips = Vec::from([ip]);
             let host_info = HostInfo::test_get(ips);
             assert!(get_extra_ips(&host_info, &ip).is_none());
 
-            let ip_2 = IpAddr::V4(Ipv4Addr::new(255, 255, 255, 255));
+            let ip_2 = IpAddr::V4(Ipv4Addr::BROADCAST);
             let ips = Vec::from([ip, ip_2]);
             let host_info = HostInfo::test_get(ips);
             let result = get_extra_ips(&host_info, &ip);
@@ -202,21 +202,21 @@ pub mod print {
         /// Get the IP and Address or just IP and a blank string, as well as the colorised port range
         fn test_terminal_host_ip() {
             let cli_args = parse_arg::CliArgs::test_new("1".to_owned(), 512, None, false);
-            let ip = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
+            let ip = IpAddr::V4(Ipv4Addr::LOCALHOST);
             assert_eq!(
                 get_host_ip(&cli_args, &ip),
                 ("127.0.0.1:".into(), "1".into(), String::new())
             );
 
             let cli_args = parse_arg::CliArgs::test_new("1-10000".to_owned(), 512, None, false);
-            let ip = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
+            let ip = IpAddr::V4(Ipv4Addr::LOCALHOST);
             assert_eq!(
                 get_host_ip(&cli_args, &ip),
                 ("127.0.0.1:".into(), "1-10000".into(), String::new())
             );
 
             let cli_args = parse_arg::CliArgs::test_new("1-65535".to_owned(), 512, None, false);
-            let ip = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
+            let ip = IpAddr::V4(Ipv4Addr::LOCALHOST);
             assert_eq!(
                 get_host_ip(&cli_args, &ip),
                 ("127.0.0.1:".into(), "1-65535".into(), String::new())
@@ -224,7 +224,7 @@ pub mod print {
 
             let cli_args =
                 parse_arg::CliArgs::test_new("1".to_owned(), 512, Some("www.google.com"), false);
-            let ip = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
+            let ip = IpAddr::V4(Ipv4Addr::LOCALHOST);
             assert_eq!(
                 get_host_ip(&cli_args, &ip),
                 (
@@ -240,7 +240,7 @@ pub mod print {
                 Some("www.google.com"),
                 false,
             );
-            let ip = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
+            let ip = IpAddr::V4(Ipv4Addr::LOCALHOST);
             assert_eq!(
                 get_host_ip(&cli_args, &ip),
                 (
@@ -256,7 +256,7 @@ pub mod print {
                 Some("www.google.com"),
                 false,
             );
-            let ip = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
+            let ip = IpAddr::V4(Ipv4Addr::LOCALHOST);
             assert_eq!(
                 get_host_ip(&cli_args, &ip),
                 (

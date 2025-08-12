@@ -49,7 +49,7 @@ impl HostInfo {
     }
 
     /// Get all the IPs into an iter
-    pub fn iter_ip(&self) -> Iter<IpAddr> {
+    pub fn iter_ip(&'_ self) -> Iter<'_, IpAddr> {
         self.ips.iter()
     }
 
