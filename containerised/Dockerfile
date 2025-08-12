@@ -49,7 +49,7 @@ RUN cp /usr/src/havn/target/$(cat /.target)/release/havn /
 ## Runtime ##
 #############
 
-FROM scratch AS runtime
+FROM scratch
 
 # Set an ENV that we're running in a container
 ENV HAVN_RUNTIME=container
