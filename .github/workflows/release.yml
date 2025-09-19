@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # Install stable rust, and associated tools
       - name: install rust
@@ -72,7 +72,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup | Artifacts
         uses: actions/download-artifact@v4
@@ -98,7 +98,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
@@ -144,7 +144,7 @@ jobs:
     steps:
       - name: update rust stable
         run: rustup update stable
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Publish Dry Run
         run: cargo publish --dry-run
 
@@ -157,6 +157,6 @@ jobs:
     steps:
       - name: update rust stable
         run: rustup update stable
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Publish
         run: cargo publish
