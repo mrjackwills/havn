@@ -1,8 +1,7 @@
 #!/bin/bash
 
-# rust create_release v0.6.2
-# 2025-02-22
-
+# rust create_release v0.6.3
+# 2025-09-19
 
 STAR_LINE='****************************************'
 CWD=$(pwd)
@@ -225,13 +224,15 @@ cargo_build_x86_windows() {
 
 # Build all releases that GitHub workflow would
 # This will download GB's of docker images
+# $1 is 0 or 1, if 1 won't run ask_continue
 cargo_build_all() {
+	skip_confirm=$1
 	cargo_build_armv6_linux
-	ask_continue
+	[ "$skip_confirm" -ne 1 ] && ask_continue
 	cargo_build_aarch64_linux
-	ask_continue
+	[ "$skip_confirm" -ne 1 ] && ask_continue
 	cargo_build_x86_linux
-	ask_continue
+	[ "$skip_confirm" -ne 1 ] && ask_continue
 	cargo_build_x86_windows
 }
 
@@ -257,11 +258,13 @@ build_container_armv6() {
 }
 
 # Build all the containers, this get executed in the github action
+# $1 is 0 or 1, if 1 won't run ask_continue
 build_container_all() {
+	skip_confirm=$1
 	build_container_amd64
-	ask_continue
+	[ "$skip_confirm" -ne 1 ] && ask_continue
 	build_container_arm64
-	ask_continue
+	[ "$skip_confirm" -ne 1 ] && ask_continue
 	build_container_armv6
 }
 
@@ -369,6 +372,7 @@ build_choice() {
 		3 "armv6 musl linux" off
 		4 "x86 windows" off
 		5 "all" off
+		6 "all automatic" off
 	)
 	choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 	exitStatus=$?
@@ -398,10 +402,15 @@ build_choice() {
 			exit
 			;;
 		5)
-			cargo_build_all
+			cargo_build_all 0
+			exit
+			;;
+		6)
+			cargo_build_all 1
 			exit
 			;;
 		esac
+		
 	done
 }
 
@@ -412,6 +421,7 @@ build_container_choice() {
 		2 "aarch64" off
 		3 "armv6" off
 		4 "all" off
+		5 "all automatic" off
 	)
 	choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 	exitStatus=$?
@@ -437,7 +447,11 @@ build_container_choice() {
 			exit
 			;;
 		4)
-			build_container_all
+			build_container_all 0
+			exit
+			;;
+		5)
+			build_container_all 1
 			exit
 			;;
 		esac
