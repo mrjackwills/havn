@@ -322,7 +322,7 @@ release_flow() {
 
 	cargo_test
 	cross_build_all 0
-	build_container_all
+	build_container_all 0
 	cargo_publish
 
 	cd "${CWD}" || error_close "Can't find ${CWD}"
