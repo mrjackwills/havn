@@ -194,46 +194,62 @@ check_cross() {
 	fi
 }
 
+# Build, using cross-rs, for windows x86
+cargo_build() {
+	echo -e "${YELLOW}cargo build --release${RESET}"
+	cargo build --release
+}
+
 # Build, using cross-rs, for linux x86 musl
-cargo_build_x86_linux() {
+cross_build_x86_linux() {
 	check_cross
 	echo -e "${YELLOW}cross build --target x86_64-unknown-linux-musl --release${RESET}"
 	cross build --target x86_64-unknown-linux-musl --release
 }
 
 # Build, using cross-rs, for linux armv6 musl
-cargo_build_armv6_linux() {
+cross_build_armv6_linux() {
 	check_cross
 	echo -e "${YELLOW}cross build --target arm-unknown-linux-musleabihf --release${RESET}"
 	cross build --target arm-unknown-linux-musleabihf --release
 }
 
 # Build, using cross-rs, for linux arm64 musl
-cargo_build_aarch64_linux() {
+cross_build_aarch64_linux() {
 	check_cross
 	echo -e "${YELLOW}cross build --target aarch64-unknown-linux-musl --release${RESET}"
 	cross build --target aarch64-unknown-linux-musl --release
 }
 
 # Build, using cross-rs, for windows x86
-cargo_build_x86_windows() {
+cross_build_x86_windows() {
 	check_cross
 	echo -e "${YELLOW}cross build --target x86_64-pc-windows-gnu --release${RESET}"
 	cross build --target x86_64-pc-windows-gnu --release
 }
 
+cargo_clean() {
+	echo -e "${YELLOW}cargo clean${RESET}"
+	cargo clean
+}
+
 # Build all releases that GitHub workflow would
 # This will download GB's of docker images
 # $1 is 0 or 1, if 1 won't run ask_continue
-cargo_build_all() {
+cross_build_all() {
 	skip_confirm=$1
-	cargo_build_armv6_linux
+	if ask_yn "cargo clean"; then
+		cargo_clean
+	fi
+	cargo_build
 	[ "$skip_confirm" -ne 1 ] && ask_continue
-	cargo_build_aarch64_linux
+	cross_build_armv6_linux
 	[ "$skip_confirm" -ne 1 ] && ask_continue
-	cargo_build_x86_linux
+	cross_build_aarch64_linux
 	[ "$skip_confirm" -ne 1 ] && ask_continue
-	cargo_build_x86_windows
+	cross_build_x86_linux
+	[ "$skip_confirm" -ne 1 ] && ask_continue
+	cross_build_x86_windows
 }
 
 # build container for amd64 platform
@@ -303,7 +319,7 @@ release_flow() {
 	get_git_remote_url
 
 	cargo_test
-	cargo_build_all
+	cross_build_all 0
 	build_container_all
 	cargo_publish
 
@@ -386,31 +402,31 @@ build_choice() {
 			exit
 			;;
 		1)
-			cargo_build_x86_linux
+			cross_build_x86_linux
 			exit
 			;;
 		2)
-			cargo_build_aarch64_linux
+			cross_build_aarch64_linux
 			exit
 			;;
 		3)
-			cargo_build_armv6_linux
+			cross_build_armv6_linux
 			exit
 			;;
 		4)
-			cargo_build_x86_windows
+			cross_build_x86_windows
 			exit
 			;;
 		5)
-			cargo_build_all 0
+			cross_build_all 0
 			exit
 			;;
 		6)
-			cargo_build_all 1
+			cross_build_all 1
 			exit
 			;;
 		esac
-		
+
 	done
 }
 
@@ -458,7 +474,6 @@ build_container_choice() {
 	done
 
 }
-
 
 main() {
 	cmd=(dialog --backtitle "Choose option" --keep-tite --radiolist "choose" 14 80 16)
