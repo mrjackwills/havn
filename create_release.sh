@@ -250,6 +250,7 @@ cross_build_all() {
 	cross_build_x86_linux
 	[ "$skip_confirm" -ne 1 ] && ask_continue
 	cross_build_x86_windows
+	[ "$skip_confirm" -ne 1 ] && ask_continue
 }
 
 # build container for amd64 platform
@@ -282,6 +283,7 @@ build_container_all() {
 	build_container_arm64
 	[ "$skip_confirm" -ne 1 ] && ask_continue
 	build_container_armv6
+	[ "$skip_confirm" -ne 1 ] && ask_continue
 }
 
 # $1 text to colourise
