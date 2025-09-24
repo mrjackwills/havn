@@ -1,8 +1,7 @@
 #!/bin/bash
 
-# rust create_release v0.6.2
-# 2025-02-22
-
+# rust create_release v0.6.3
+# 2025-09-19
 
 STAR_LINE='****************************************'
 CWD=$(pwd)
@@ -195,44 +194,63 @@ check_cross() {
 	fi
 }
 
+# Build, using cross-rs, for windows x86
+cargo_build() {
+	echo -e "${YELLOW}cargo build --release${RESET}"
+	cargo build --release
+}
+
 # Build, using cross-rs, for linux x86 musl
-cargo_build_x86_linux() {
+cross_build_x86_linux() {
 	check_cross
 	echo -e "${YELLOW}cross build --target x86_64-unknown-linux-musl --release${RESET}"
 	cross build --target x86_64-unknown-linux-musl --release
 }
 
 # Build, using cross-rs, for linux armv6 musl
-cargo_build_armv6_linux() {
+cross_build_armv6_linux() {
 	check_cross
 	echo -e "${YELLOW}cross build --target arm-unknown-linux-musleabihf --release${RESET}"
 	cross build --target arm-unknown-linux-musleabihf --release
 }
 
 # Build, using cross-rs, for linux arm64 musl
-cargo_build_aarch64_linux() {
+cross_build_aarch64_linux() {
 	check_cross
 	echo -e "${YELLOW}cross build --target aarch64-unknown-linux-musl --release${RESET}"
 	cross build --target aarch64-unknown-linux-musl --release
 }
 
 # Build, using cross-rs, for windows x86
-cargo_build_x86_windows() {
+cross_build_x86_windows() {
 	check_cross
 	echo -e "${YELLOW}cross build --target x86_64-pc-windows-gnu --release${RESET}"
 	cross build --target x86_64-pc-windows-gnu --release
 }
 
+cargo_clean() {
+	echo -e "${YELLOW}cargo clean${RESET}"
+	cargo clean
+}
+
 # Build all releases that GitHub workflow would
 # This will download GB's of docker images
-cargo_build_all() {
-	cargo_build_armv6_linux
-	ask_continue
-	cargo_build_aarch64_linux
-	ask_continue
-	cargo_build_x86_linux
-	ask_continue
-	cargo_build_x86_windows
+# $1 is 0 or 1, if 1 won't run ask_continue
+cross_build_all() {
+	skip_confirm=$1
+	if ask_yn "cargo clean"; then
+		cargo_clean
+	fi
+	cargo_build
+	[ "$skip_confirm" -ne 1 ] && ask_continue
+	cross_build_armv6_linux
+	[ "$skip_confirm" -ne 1 ] && ask_continue
+	cross_build_aarch64_linux
+	[ "$skip_confirm" -ne 1 ] && ask_continue
+	cross_build_x86_linux
+	[ "$skip_confirm" -ne 1 ] && ask_continue
+	cross_build_x86_windows
+	[ "$skip_confirm" -ne 1 ] && ask_continue
 }
 
 # build container for amd64 platform
@@ -257,12 +275,15 @@ build_container_armv6() {
 }
 
 # Build all the containers, this get executed in the github action
+# $1 is 0 or 1, if 1 won't run ask_continue
 build_container_all() {
+	skip_confirm=$1
 	build_container_amd64
-	ask_continue
+	[ "$skip_confirm" -ne 1 ] && ask_continue
 	build_container_arm64
-	ask_continue
+	[ "$skip_confirm" -ne 1 ] && ask_continue
 	build_container_armv6
+	[ "$skip_confirm" -ne 1 ] && ask_continue
 }
 
 # $1 text to colourise
@@ -300,8 +321,8 @@ release_flow() {
 	get_git_remote_url
 
 	cargo_test
-	cargo_build_all
-	build_container_all
+	cross_build_all 0
+	build_container_all 0
 	cargo_publish
 
 	cd "${CWD}" || error_close "Can't find ${CWD}"
@@ -369,6 +390,7 @@ build_choice() {
 		3 "armv6 musl linux" off
 		4 "x86 windows" off
 		5 "all" off
+		6 "all automatic" off
 	)
 	choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 	exitStatus=$?
@@ -382,26 +404,31 @@ build_choice() {
 			exit
 			;;
 		1)
-			cargo_build_x86_linux
+			cross_build_x86_linux
 			exit
 			;;
 		2)
-			cargo_build_aarch64_linux
+			cross_build_aarch64_linux
 			exit
 			;;
 		3)
-			cargo_build_armv6_linux
+			cross_build_armv6_linux
 			exit
 			;;
 		4)
-			cargo_build_x86_windows
+			cross_build_x86_windows
 			exit
 			;;
 		5)
-			cargo_build_all
+			cross_build_all 0
+			exit
+			;;
+		6)
+			cross_build_all 1
 			exit
 			;;
 		esac
+
 	done
 }
 
@@ -412,6 +439,7 @@ build_container_choice() {
 		2 "aarch64" off
 		3 "armv6" off
 		4 "all" off
+		5 "all automatic" off
 	)
 	choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 	exitStatus=$?
@@ -437,14 +465,17 @@ build_container_choice() {
 			exit
 			;;
 		4)
-			build_container_all
+			build_container_all 0
+			exit
+			;;
+		5)
+			build_container_all 1
 			exit
 			;;
 		esac
 	done
 
 }
-
 
 main() {
 	cmd=(dialog --backtitle "Choose option" --keep-tite --radiolist "choose" 14 80 16)

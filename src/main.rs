@@ -38,11 +38,11 @@ async fn main() {
     print::name_and_target(&cli_args, ip);
     print::extra_ips(&host_info, ip);
 
-    let spinner = Spinner::new();
-    spinner.start();
+    let spinner = cli_args.verbose.is_none().then(Spinner::new);
+    spinner.as_ref().map(terminal::spinner::Spinner::start);
     let now = std::time::Instant::now();
     let scan_output = AllPortStatus::scan_ports(cli_args, ip).await;
-    spinner.stop();
+    spinner.as_ref().map(terminal::spinner::Spinner::stop);
     let done = now.elapsed();
 
     print::scan_time(&scan_output, done);
