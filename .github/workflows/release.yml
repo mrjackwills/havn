@@ -2,6 +2,7 @@ name: Release CI
 
 permissions:
   contents: write
+  packages: write
 
 on:
   push:
