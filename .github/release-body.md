@@ -1,16 +1,13 @@
-### 2025-08-12
+### 2025-09-24
 
 ### Chores
-+ Rust 1.87.0 linting, [c5aaca91df7ba130fd192bff2e754d5f3c486c96]
-+ dependencies updated, [92a43279286d2807e8ca65241997317f229f0b70], [70c9be4e847aae50efd0770b13831956eb5424f1]
-+ devcontainer updated, [8bb58c94ff1c669df8dc77202b2c9b3eb4519a4c]
-+ create_release.sh updated, [5dccbe4f419a81aaf214e006b2fd3b23a3c99e66]
++ create_release.sh updated, [f0f142af59f5dcad2d89460e7184885a08e9cedd], [844c8fd48ba86400ac6197e6fff70327cbb04f07]
++ _typos.toml updated, [2b5e50b4c7c362f21c7ed5d4e78852dcdebd967a]
++ GitHub workflow update, [cb342075980319ef816f3e2df5af71734f003892], [7d1ed78d213bda8a84eaa0d23153d9dc76ebce2c]
++ dependencies updated, [2ffc8ea743ccf5dbca5664c9b3ec092d8d3812e9]
 
 ### Features
-+ verbose mode with `--verbose` cli argument, [e3c58e6e70c1c94c76d2fea05503ef5e13c73c42]
-
-### Refactors
-+ Dockerfile dead code removed, [4f145d68d125dba6ed3ee636e48bfbad0a60b2dd]
++ Hide spinner when in verbose mode, [a4ac2725f8d6581290a7e83219652f252e7cde69]
 
 
 see <a href='https://github.com/mrjackwills/havn/blob/main/CHANGELOG.md'>CHANGELOG.md</a> for more details

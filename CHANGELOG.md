@@ -1,11 +1,14 @@
+# <a href='https://github.com/mrjackwills/havn/releases/tag/v0.3.1'>v0.3.1</a>
+### 2025-09-24
+
 ### Chores
-+ create_release.sh updated, [f0f142af59f5dcad2d89460e7184885a08e9cedd], [844c8fd48ba86400ac6197e6fff70327cbb04f07]
-+ _typos.toml updated, [2b5e50b4c7c362f21c7ed5d4e78852dcdebd967a]
-+ GitHub workflow update, [cb342075980319ef816f3e2df5af71734f003892], [7d1ed78d213bda8a84eaa0d23153d9dc76ebce2c]
-+ dependencies updated, [2ffc8ea743ccf5dbca5664c9b3ec092d8d3812e9]
++ create_release.sh updated, [f0f142af](https://github.com/mrjackwills/havn/commit/f0f142af59f5dcad2d89460e7184885a08e9cedd), [844c8fd4](https://github.com/mrjackwills/havn/commit/844c8fd48ba86400ac6197e6fff70327cbb04f07)
++ _typos.toml updated, [2b5e50b4](https://github.com/mrjackwills/havn/commit/2b5e50b4c7c362f21c7ed5d4e78852dcdebd967a)
++ GitHub workflow update, [cb342075](https://github.com/mrjackwills/havn/commit/cb342075980319ef816f3e2df5af71734f003892), [7d1ed78d](https://github.com/mrjackwills/havn/commit/7d1ed78d213bda8a84eaa0d23153d9dc76ebce2c)
++ dependencies updated, [2ffc8ea7](https://github.com/mrjackwills/havn/commit/2ffc8ea743ccf5dbca5664c9b3ec092d8d3812e9)
 
 ### Features
-+ Hide spinner when in verbose mode, [a4ac2725f8d6581290a7e83219652f252e7cde69]
++ Hide spinner when in verbose mode, [a4ac2725](https://github.com/mrjackwills/havn/commit/a4ac2725f8d6581290a7e83219652f252e7cde69)
 
 # <a href='https://github.com/mrjackwills/havn/releases/tag/v0.3.0'>v0.3.0</a>
 ### 2025-08-12
