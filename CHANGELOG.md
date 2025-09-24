@@ -1,3 +1,9 @@
+### Docs
++ README.md updated: x-cmd, closes #[9], [a50fb6ef1bb31083a10dbef1fe853c6ba73ade77]
+
+### Fixes
++ Workflow package permissions, [c6ed11b436579cb3b526aede832ee5618a1bc10f]
+
 # <a href='https://github.com/mrjackwills/havn/releases/tag/v0.3.1'>v0.3.1</a>
 ### 2025-09-24
 
