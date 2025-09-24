@@ -1,8 +1,11 @@
+# <a href='https://github.com/mrjackwills/havn/releases/tag/v0.3.2'>v0.3.2</a>
+### 2025-09-24
+
 ### Docs
-+ README.md updated, added x-cmd, closes #9, [938121c0dc359e1b3cae5783379aecb146225c5a]
++ README.md updated, added x-cmd, closes [#9](https://github.com/mrjackwills/havn/issues/9), [938121c0](https://github.com/mrjackwills/havn/commit/938121c0dc359e1b3cae5783379aecb146225c5a)
 
 ### Fixes
-+ Workflow package permissions, [f593769272b3c96e4aa6e2bcad9408bbc22eba45]
++ Workflow package permissions, [f5937692](https://github.com/mrjackwills/havn/commit/f593769272b3c96e4aa6e2bcad9408bbc22eba45)
 
 # <a href='https://github.com/mrjackwills/havn/releases/tag/v0.3.1'>v0.3.1</a>
 ### 2025-09-24
