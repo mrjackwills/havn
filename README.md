@@ -56,6 +56,14 @@ docker run --rm -it mrjackwills/havn:latest #[options]
 --network=host
 ```
 
+### X-CMD
+
+If you're an [x-cmd](https://x-cmd.com/install/havn) user, you can install it with the following command:
+
+```shell
+x install havn
+```
+
 ### Pre-Built
 See the <a href="https://github.com/mrjackwills/havn/releases/latest" target='_blank' rel='noopener noreferrer'>pre-built binaries</a>
 
