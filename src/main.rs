@@ -20,8 +20,7 @@ fn tokio_signal() {
     });
 }
 
-#[tokio::main]
-async fn main() {
+async fn start() {
     let cli_args = parse_arg::CliArgs::new();
     terminal::text_color(&cli_args);
     let exit_error = || print::address_error(&cli_args);
@@ -47,4 +46,9 @@ async fn main() {
 
     print::scan_time(&scan_output, done);
     print::result_table(&scan_output);
+}
+
+#[tokio::main]
+async fn main() {
+    tokio::spawn(start()).await.ok();
 }
