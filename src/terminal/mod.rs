@@ -53,7 +53,7 @@ pub mod print {
         if cli_args.address == ip.to_string() {
             (format!("{}:", cli_args.address), ports, String::new())
         } else {
-            (format!("{ip}:"), ports, cli_args.address.to_string())
+            (format!("{ip}:"), ports, cli_args.address.clone())
         }
     }
 

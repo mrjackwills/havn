@@ -6,7 +6,7 @@ FROM --platform=$BUILDPLATFORM rust:slim AS builder
 
 ARG TARGETARCH
 
-# These are build platform depandant, but will be ignored if not needed
+# These are build platform dependant, but will be ignored if not needed
 ENV CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER="aarch64-linux-gnu-gcc"
 ENV CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_RUSTFLAGS="-C target-feature=+crt-static -C link-arg=-lgcc"
 ENV CARGO_TARGET_ARM_UNKNOWN_LINUX_MUSLEABIHF_LINKER="arm-linux-gnueabihf-ld"
