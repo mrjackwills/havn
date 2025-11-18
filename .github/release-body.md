@@ -1,10 +1,12 @@
-### 2025-09-24
+### 2025-11-18
 
-### Docs
-+ README.md updated, added x-cmd, closes #9, [938121c0dc359e1b3cae5783379aecb146225c5a]
+### Chores
++ Rust 1.91 linting, [67f84acc40a14ee97608eea40dedf4e18c748871]
++ dependencies updated, [97c292de48dcecb2824ee3d7de917e2e617c0eae]
 
-### Fixes
-+ Workflow package permissions, [f593769272b3c96e4aa6e2bcad9408bbc22eba45]
+### Features
++ use async_channel, [85d743251096ff431666865bcde6f3aa73b2ef8c]
++ Spawn in main, supposedly a performance improvement, [d7a06743f5ca1f02f0010d34e29af240637598e2]
 
 
 see <a href='https://github.com/mrjackwills/havn/blob/main/CHANGELOG.md'>CHANGELOG.md</a> for more details
