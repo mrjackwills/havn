@@ -1,7 +1,8 @@
 pub mod host_info;
 use crate::{exit, parse_arg::CliArgs, port_descriptions::PortDescriptions};
+use async_channel::Sender;
 use std::{collections::HashSet, future::Future, net::IpAddr, pin::Pin};
-use tokio::{net::TcpStream, sync::mpsc::Sender};
+use tokio::net::TcpStream;
 
 #[derive(Debug, Clone, Hash, Copy)]
 struct PortMessage {
@@ -125,8 +126,6 @@ impl AllPortStatus {
 
     /// Spawn a port scan into its own thread
     fn spawn_scan_port(
-        // max_counter: u8
-        // then verbose is max_counter - counter
         counter: u8,
         ip: IpAddr,
         port: u16,
@@ -142,7 +141,7 @@ impl AllPortStatus {
         let mut first_pass = Self::new(cli_args);
         let counter = cli_args.retry;
 
-        let (sx, mut rx) = tokio::sync::mpsc::channel(usize::from(cli_args.concurrent));
+        let (sx, rx) = async_channel::bounded(usize::from(cli_args.concurrent));
 
         let mut to_spawn = cli_args.ports_split();
 
@@ -156,7 +155,7 @@ impl AllPortStatus {
             Self::spawn_scan_port(counter, *ip, port, sx.clone(), cli_args.timeout, verbose);
         }
 
-        while let Some(message) = rx.recv().await {
+        while let Ok(message) = rx.recv().await {
             first_pass.insert(message);
 
             // Need to manually close the receiver here, as we don't drop sx, and its being continually cloned
@@ -166,7 +165,6 @@ impl AllPortStatus {
 
             if let Some(port) = to_spawn.pop() {
                 Self::spawn_scan_port(counter, *ip, port, sx.clone(), cli_args.timeout, verbose);
-                // Self::spawn_scan_port(port, *ip, cli_args.timeout, sx.clone(), counter);
             }
         }
         first_pass
@@ -175,7 +173,7 @@ impl AllPortStatus {
     /// Verify the discovered open ports through sequential scans instead of concurrent spawning.
     async fn second_pass(first_pass: Self, cli_args: CliArgs, ip: &IpAddr) -> Self {
         let mut validated_result = Self::from(&first_pass);
-        let (sx, mut rx) = tokio::sync::mpsc::channel(first_pass.open.len());
+        let (sx, rx) = async_channel::bounded(first_pass.open.len());
         let verbose = if cli_args.verbose.is_some() {
             Some(cli_args.retry)
         } else {
@@ -194,7 +192,7 @@ impl AllPortStatus {
             .await;
         }
         drop(sx);
-        while let Some(message) = rx.recv().await {
+        while let Ok(message) = rx.recv().await {
             validated_result.insert(message);
         }
         validated_result
