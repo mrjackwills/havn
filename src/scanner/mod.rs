@@ -348,7 +348,6 @@ mod tests {
     async fn test_scanner_all() {
         let mut cli_args = parse_arg::CliArgs::test_new("1-65535".to_owned(), 2048, None, false);
         let result = AllPortStatus::first_pass(&mut cli_args, &V4_LOCAL).await;
-        println!("{result:#?}");
         assert_eq!(
             usize::from(result.closed) + usize::from(result.open_len()),
             65535
