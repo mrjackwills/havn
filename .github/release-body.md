@@ -1,12 +1,11 @@
-### 2025-11-18
+### 2026-01-21
 
 ### Chores
-+ Rust 1.91 linting, [67f84acc40a14ee97608eea40dedf4e18c748871]
-+ dependencies updated, [97c292de48dcecb2824ee3d7de917e2e617c0eae]
++ GitHub workflow updated, [45b0753b6b734f2f4574155cb96366a7786b5b5f]
++ dependencies updated, [87bc2a412f306916f77af471802a250ee44f9477]
 
-### Features
-+ use async_channel, [85d743251096ff431666865bcde6f3aa73b2ef8c]
-+ Spawn in main, supposedly a performance improvement, [d7a06743f5ca1f02f0010d34e29af240637598e2]
+### Fixes
++ Cargo.toml linting workaround, [7d2939322f1ba2ddfd97433d980d965f8a711bf6]
 
 
 see <a href='https://github.com/mrjackwills/havn/blob/main/CHANGELOG.md'>CHANGELOG.md</a> for more details
