@@ -1,6 +1,6 @@
 [package]
 name = "havn"
-version = "0.3.3"
+version = "0.3.4"
 edition = "2024"
 authors = ["Jack Wills <email@mrjackwills.com>"]
 description = "A fast configurable port scanner with reasonable defaults"
@@ -15,8 +15,6 @@ categories = ["command-line-utilities"]
 unsafe_code = "forbid"
 
 [lints.clippy]
-nursery = { level = "warn", priority = -1 }
-pedantic = { level = "warn", priority = -1 }
 unused_async = "warn"
 unwrap_used = "warn"
 expect_used = "warn"
@@ -30,7 +28,7 @@ similar_names = "allow"
 [dependencies]
 async-channel = "2.5"
 clap = { version = "4.5", features = ["color", "derive", "unicode"] }
-tokio = { version = "1.48", features = [
+tokio = { version = "1.49", features = [
 	"macros",
 	"net",
 	"parking_lot",
@@ -42,7 +40,7 @@ tokio = { version = "1.48", features = [
 ] }
 
 [target.'cfg(windows)'.dependencies]
-os_info = "3.13"
+os_info = "3.14"
 
 [dev-dependencies]
 warp = { version = "0.4", features = ["server"] }

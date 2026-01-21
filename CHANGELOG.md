@@ -1,3 +1,13 @@
+# <a href='https://github.com/mrjackwills/havn/releases/tag/v0.3.4'>v0.3.4</a>
+### 2026-01-21
+
+### Chores
++ GitHub workflow updated, [45b0753b](https://github.com/mrjackwills/havn/commit/45b0753b6b734f2f4574155cb96366a7786b5b5f)
++ dependencies updated, [87bc2a41](https://github.com/mrjackwills/havn/commit/87bc2a412f306916f77af471802a250ee44f9477)
+
+### Fixes
++ Cargo.toml linting workaround, [7d293932](https://github.com/mrjackwills/havn/commit/7d2939322f1ba2ddfd97433d980d965f8a711bf6)
+
 # <a href='https://github.com/mrjackwills/havn/releases/tag/v0.3.3'>v0.3.3</a>
 ### 2025-11-18
 
