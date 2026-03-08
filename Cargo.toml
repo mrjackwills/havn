@@ -28,7 +28,7 @@ similar_names = "allow"
 [dependencies]
 async-channel = "2.5"
 clap = { version = "4.5", features = ["color", "derive", "unicode"] }
-tokio = { version = "1.49", features = [
+tokio = { version = "1.50", features = [
 	"macros",
 	"net",
 	"parking_lot",
