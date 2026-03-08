@@ -1,11 +1,8 @@
-### 2026-01-21
+### 2026-03-08
 
 ### Chores
-+ GitHub workflow updated, [45b0753b6b734f2f4574155cb96366a7786b5b5f]
-+ dependencies updated, [87bc2a412f306916f77af471802a250ee44f9477]
-
-### Fixes
-+ Cargo.toml linting workaround, [7d2939322f1ba2ddfd97433d980d965f8a711bf6]
++ GitHub workflow dependencies updated, [664817e73d91fc95f5d15df1326f2bd6f10599b1]
++ dependencies updated, [39105024387f07caa089138c57f65908479e5b67]
 
 
 see <a href='https://github.com/mrjackwills/havn/blob/main/CHANGELOG.md'>CHANGELOG.md</a> for more details
