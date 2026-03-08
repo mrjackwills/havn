@@ -1,3 +1,7 @@
+### Chores
++ GitHub workflow dependencies updated, [664817e73d91fc95f5d15df1326f2bd6f10599b1]
++ dependencies updated, [39105024387f07caa089138c57f65908479e5b67]
+
 # <a href='https://github.com/mrjackwills/havn/releases/tag/v0.3.4'>v0.3.4</a>
 ### 2026-01-21
 
