@@ -1,5 +1,8 @@
+# <a href='https://github.com/mrjackwills/havn/releases/tag/v0.3.7'>v0.3.7</a>
+### 2026-04-27
+
 ### Fixes
-+ GitHub workflow container build, [4a57e264ce06c615ed75275bddf5ed1450d6b5df]
++ GitHub workflow container build, [4a57e264](https://github.com/mrjackwills/havn/commit/4a57e264ce06c615ed75275bddf5ed1450d6b5df)
 
 # <a href='https://github.com/mrjackwills/havn/releases/tag/v0.3.6'>v0.3.6</a>
 ### 2026-04-24
