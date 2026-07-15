@@ -22,7 +22,7 @@
 				"christian-kohler.path-intellisense",
 				"citreae535.sparse-crates",
 				"foxundermoon.shell-format",
-				"gruntfuggly.todo-tree",
+				"fanaticpythoner.better-todo-tree",
 				"mutantdino.resourcemonitor",
 				"redhat.vscode-yaml",
 				"rust-lang.rust-analyzer",
@@ -42,7 +42,7 @@
 	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 	"remoteUser": "vscode",
 	"features": {
-		"ghcr.io/devcontainers/features/docker-in-docker:2": {
+		"ghcr.io/devcontainers/features/docker-in-docker:4": {
 			"version": "latest",
 			"moby": true,
 			"dockerDashComposeVersion": "v2"
