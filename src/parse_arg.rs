@@ -17,7 +17,7 @@ pub struct Cli {
     #[clap(short = 'c', value_name = "concurrent", default_value_t = 1000)]
     concurrent: u16,
 
-    /// Ports to scan, accepts a range, or single port, conflicts with "-p".
+    /// Ports to scan, accepts a range, or single port, conflicts with "-a".
     #[clap(
         short = 'p',
         value_name = "ports",
@@ -99,19 +99,13 @@ pub struct CliArgs {
 }
 
 impl CliArgs {
+    /// Check if a given arg is 0, and if so, return as 1, else return value
+    fn check_if_zero<T: PartialEq + From<u8>>(x: T) -> T {
+        if x == 0.into() { T::from(1) } else { x }
+    }
+
     pub fn new() -> Self {
-        let cli = Cli::parse();
-        let port_range = PortRange::from(&cli);
-        Self {
-            address: cli.address,
-            concurrent: cli.concurrent,
-            ip6: cli.ip_v6,
-            monochrome: cli.monochrome,
-            port_range,
-            retry: cli.retry,
-            timeout: cli.timeout,
-            verbose: if cli.verbose { Some(()) } else { None },
-        }
+        Self::from(Cli::parse())
     }
 
     /// Get the total number of ports to scan
@@ -135,6 +129,23 @@ impl CliArgs {
             output
         } else {
             vec![]
+        }
+    }
+}
+
+/// Build CliArgs from the Cli, converting zero-value concurrent/timeout args to 1
+impl From<Cli> for CliArgs {
+    fn from(cli: Cli) -> Self {
+        let port_range = PortRange::from(&cli);
+        Self {
+            address: cli.address,
+            concurrent: Self::check_if_zero(cli.concurrent),
+            ip6: cli.ip_v6,
+            monochrome: cli.monochrome,
+            port_range,
+            retry: cli.retry,
+            timeout: Self::check_if_zero(cli.timeout),
+            verbose: if cli.verbose { Some(()) } else { None },
         }
     }
 }
@@ -176,7 +187,9 @@ impl CliArgs {
 
 #[cfg(test)]
 mod tests {
-    use crate::parse_arg::PortRange;
+    use clap::Parser;
+
+    use crate::parse_arg::{CliArgs, PortRange};
 
     use super::Cli;
 
@@ -225,5 +238,30 @@ mod tests {
         assert_eq!(result.start, 1);
         assert_eq!(result.end, 65535);
         assert_eq!(result.ports.len(), 65535);
+    }
+
+    #[test]
+    /// Timeout and concurrent values are changed from 0 to 1
+    #[allow(clippy::unwrap_used)]
+    fn test_cli_zero_values() {
+        let cli = Cli::try_parse_from(["havn", "-c", "0", "-t", "0"]).unwrap();
+        let args = CliArgs::from(cli);
+        assert_eq!(args.concurrent, 1);
+        assert_eq!(args.timeout, 1);
+
+        let cli = Cli::try_parse_from(["havn", "-c", "10", "-t", "0"]).unwrap();
+        let args = CliArgs::from(cli);
+        assert_eq!(args.concurrent, 10);
+        assert_eq!(args.timeout, 1);
+
+        let cli = Cli::try_parse_from(["havn", "-c", "0", "-t", "10"]).unwrap();
+        let args = CliArgs::from(cli);
+        assert_eq!(args.concurrent, 1);
+        assert_eq!(args.timeout, 10);
+
+        let cli = Cli::try_parse_from(["havn", "-c", "10", "-t", "10"]).unwrap();
+        let args = CliArgs::from(cli);
+        assert_eq!(args.concurrent, 10);
+        assert_eq!(args.timeout, 10);
     }
 }
