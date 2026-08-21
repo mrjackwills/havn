@@ -93,7 +93,7 @@ impl AllPortStatus {
             if let Some(verbose) = verbose {
                 println!(
                     "port: {port:>5}, attempt: #{attempt:>2}, status: {status:>6}, time: {ms:>4} ms",
-                    attempt = verbose - counter + 1,
+                    attempt = verbose.saturating_sub(counter).saturating_add(1),
                     ms = now.elapsed().as_millis(),
                     status = if status { "open" } else { "closed" }
                 );
