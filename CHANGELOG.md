@@ -1,3 +1,11 @@
+### Chores
++ GitHub workflow updated, [46058e9a73dd55a7ae1c95ca3abca23917c1cdcb]
++ dependencies updated, [8d5d86b493ac96ac6fd739d3a4a133cd8a5f77a7]
+
+### Fixes
++ use saturating arithmetic, [81ab40dddba476e12b60ff284e0715ab88159adf]
++ parse_arg check for 0 values, [9fe2b6dc1ab7348e0442a27cf5b81ff0953df4b2]
+
 # <a href='https://github.com/mrjackwills/havn/releases/tag/v0.3.8'>v0.3.8</a>
 ### 2026-07-15
 
