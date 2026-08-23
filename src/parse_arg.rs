@@ -175,6 +175,7 @@ impl CliArgs {
 }
 
 #[cfg(test)]
+#[allow(clippy::unwrap_used)]
 mod tests {
     use clap::Parser;
 
@@ -231,7 +232,6 @@ mod tests {
 
     #[test]
     /// Timeout and concurrent values are changed from 0 to 1
-    #[allow(clippy::unwrap_used)]
     fn test_cli_zero_values() {
         let cli = Cli::try_parse_from(["havn", "-c", "0", "-t", "0"]).unwrap();
         let args = CliArgs::from(cli);
