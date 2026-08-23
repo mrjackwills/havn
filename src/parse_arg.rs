@@ -1,3 +1,5 @@
+use std::collections::VecDeque;
+
 use clap::Parser;
 pub const PORT_UPPER_DEFAULT: u16 = 1000;
 
@@ -17,7 +19,7 @@ pub struct Cli {
     #[clap(short = 'c', value_name = "concurrent", default_value_t = 1000)]
     concurrent: u16,
 
-    /// Ports to scan, accepts a range, or single port, conflicts with "-p".
+    /// Ports to scan, accepts a range, or single port, conflicts with "-a".
     #[clap(
         short = 'p',
         value_name = "ports",
@@ -48,9 +50,10 @@ pub struct Cli {
     verbose: bool,
 }
 
-/// Create a Vec<u16> (aka ports) from the CliArgs.
-/// With a vec, the back is pop'ed, so we reverse the order of the Vec<u16> here, so that it pops from smallest to largest
-/// Can maybe introduce a "shuffle" mode, so scan ports in a random order - although not sure if that would have any benefit, and would require using another dependency
+/// Create a VecDeque<u16> (aka ports) from the CliArgs.
+/// Pop from front, from smallest to largest, no need to reverse
+/// Can maybe introduce a "shuffle" mode, so scan ports in a random order, with buffered_unordered partially random?
+/// although not sure if that would have any benefit, and would require using another dependency
 impl From<&Cli> for PortRange {
     fn from(cli: &Cli) -> Self {
         let (start, end) = if cli.all_ports {
@@ -74,7 +77,7 @@ impl From<&Cli> for PortRange {
         Self {
             start,
             end,
-            ports: (start..=end).collect::<Vec<_>>(),
+            ports: (start..=end).collect::<VecDeque<_>>(),
         }
     }
 }
@@ -83,7 +86,7 @@ impl From<&Cli> for PortRange {
 pub struct PortRange {
     pub start: u16,
     pub end: u16,
-    ports: Vec<u16>,
+    ports: VecDeque<u16>,
 }
 
 #[derive(Debug, Clone)]
@@ -99,19 +102,13 @@ pub struct CliArgs {
 }
 
 impl CliArgs {
+    /// Check if a given arg is 0, and if so, return as 1, else return value
+    fn check_if_zero<T: PartialEq + From<u8>>(x: T) -> T {
+        if x == 0.into() { T::from(1) } else { x }
+    }
+
     pub fn new() -> Self {
-        let cli = Cli::parse();
-        let port_range = PortRange::from(&cli);
-        Self {
-            address: cli.address,
-            concurrent: cli.concurrent,
-            ip6: cli.ip_v6,
-            monochrome: cli.monochrome,
-            port_range,
-            retry: cli.retry,
-            timeout: cli.timeout,
-            verbose: if cli.verbose { Some(()) } else { None },
-        }
+        Self::from(Cli::parse())
     }
 
     /// Get the total number of ports to scan
@@ -119,22 +116,25 @@ impl CliArgs {
         u16::try_from(self.port_range.ports.len()).unwrap_or_default()
     }
 
-    /// Remove the last entry from the ports vec
+    /// Remove the first entry from the ports deque
     pub fn ports_pop(&mut self) -> Option<u16> {
-        self.port_range.ports.pop()
+        self.port_range.ports.pop_front()
     }
+}
 
-    /// Split the ports vec, this can panic if index > ports.len(), hence the check and return of empty vec
-    /// Reverse the original and split vecs, so can pop off in order
-    pub fn ports_split(&mut self) -> Vec<u16> {
-        let concurrent = usize::from(self.concurrent);
-        if self.port_range.ports.len() >= concurrent {
-            let mut output = self.port_range.ports.split_off(concurrent);
-            output.reverse();
-            self.port_range.ports.reverse();
-            output
-        } else {
-            vec![]
+/// Build CliArgs from the Cli, converting zero-value concurrent/timeout args to 1
+impl From<Cli> for CliArgs {
+    fn from(cli: Cli) -> Self {
+        let port_range = PortRange::from(&cli);
+        Self {
+            address: cli.address,
+            concurrent: Self::check_if_zero(cli.concurrent),
+            ip6: cli.ip_v6,
+            monochrome: cli.monochrome,
+            port_range,
+            retry: cli.retry,
+            timeout: Self::check_if_zero(cli.timeout),
+            verbose: if cli.verbose { Some(()) } else { None },
         }
     }
 }
@@ -175,8 +175,11 @@ impl CliArgs {
 }
 
 #[cfg(test)]
+#[allow(clippy::unwrap_used)]
 mod tests {
-    use crate::parse_arg::PortRange;
+    use clap::Parser;
+
+    use crate::parse_arg::{CliArgs, PortRange};
 
     use super::Cli;
 
@@ -225,5 +228,29 @@ mod tests {
         assert_eq!(result.start, 1);
         assert_eq!(result.end, 65535);
         assert_eq!(result.ports.len(), 65535);
+    }
+
+    #[test]
+    /// Timeout and concurrent values are changed from 0 to 1
+    fn test_cli_zero_values() {
+        let cli = Cli::try_parse_from(["havn", "-c", "0", "-t", "0"]).unwrap();
+        let args = CliArgs::from(cli);
+        assert_eq!(args.concurrent, 1);
+        assert_eq!(args.timeout, 1);
+
+        let cli = Cli::try_parse_from(["havn", "-c", "10", "-t", "0"]).unwrap();
+        let args = CliArgs::from(cli);
+        assert_eq!(args.concurrent, 10);
+        assert_eq!(args.timeout, 1);
+
+        let cli = Cli::try_parse_from(["havn", "-c", "0", "-t", "10"]).unwrap();
+        let args = CliArgs::from(cli);
+        assert_eq!(args.concurrent, 1);
+        assert_eq!(args.timeout, 10);
+
+        let cli = Cli::try_parse_from(["havn", "-c", "10", "-t", "10"]).unwrap();
+        let args = CliArgs::from(cli);
+        assert_eq!(args.concurrent, 10);
+        assert_eq!(args.timeout, 10);
     }
 }
