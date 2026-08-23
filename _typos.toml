@@ -3,3 +3,7 @@ extend-exclude = ["src/port_descriptions/*.txt"]
 
 [default.extend-words]
 havn = "havn"
+
+[type.changelog]
+extend-glob = ["CHANGELOG.md"]
+extend-ignore-re = ["\\[[0-9a-fA-F]{7,40}\\]"]
