@@ -9,7 +9,7 @@ homepage = "https://github.com/mrjackwills/havn"
 license = "MIT"
 readme = "README.md"
 keywords = ["docker", "havn", "port", "scan", "tokio"]
-rust-version = "1.90.0"
+rust-version = "1.91.1"
 categories = ["command-line-utilities"]
 
 [lints.rust]

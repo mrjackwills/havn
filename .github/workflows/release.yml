@@ -62,8 +62,8 @@ jobs:
           tar -C "target/${{ matrix.target }}/release" -czf "./havn_${{ matrix.output_name }}" havn
 
       # Upload output for release page
+      # https://github.com/actions/upload-artifact
       - name: Upload Artifacts
-        # https://github.com/actions/upload-artifact
         uses: actions/upload-artifact@v7
         with:
           if-no-files-found: error
