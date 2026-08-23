@@ -1,3 +1,5 @@
+use std::collections::VecDeque;
+
 use clap::Parser;
 pub const PORT_UPPER_DEFAULT: u16 = 1000;
 
@@ -48,9 +50,10 @@ pub struct Cli {
     verbose: bool,
 }
 
-/// Create a Vec<u16> (aka ports) from the CliArgs.
-/// With a vec, the back is pop'ed, so we reverse the order of the Vec<u16> here, so that it pops from smallest to largest
-/// Can maybe introduce a "shuffle" mode, so scan ports in a random order - although not sure if that would have any benefit, and would require using another dependency
+/// Create a VecDeque<u16> (aka ports) from the CliArgs.
+/// Pop from front, from smallest to largest, no need to reverse
+/// Can maybe introduce a "shuffle" mode, so scan ports in a random order, with buffered_unordered partially random?
+/// although not sure if that would have any benefit, and would require using another dependency
 impl From<&Cli> for PortRange {
     fn from(cli: &Cli) -> Self {
         let (start, end) = if cli.all_ports {
@@ -74,7 +77,7 @@ impl From<&Cli> for PortRange {
         Self {
             start,
             end,
-            ports: (start..=end).collect::<Vec<_>>(),
+            ports: (start..=end).collect::<VecDeque<_>>(),
         }
     }
 }
@@ -83,7 +86,7 @@ impl From<&Cli> for PortRange {
 pub struct PortRange {
     pub start: u16,
     pub end: u16,
-    ports: Vec<u16>,
+    ports: VecDeque<u16>,
 }
 
 #[derive(Debug, Clone)]
@@ -113,23 +116,9 @@ impl CliArgs {
         u16::try_from(self.port_range.ports.len()).unwrap_or_default()
     }
 
-    /// Remove the last entry from the ports vec
+    /// Remove the first entry from the ports deque
     pub fn ports_pop(&mut self) -> Option<u16> {
-        self.port_range.ports.pop()
-    }
-
-    /// Split the ports vec, this can panic if index > ports.len(), hence the check and return of empty vec
-    /// Reverse the original and split vecs, so can pop off in order
-    pub fn ports_split(&mut self) -> Vec<u16> {
-        let concurrent = usize::from(self.concurrent);
-        if self.port_range.ports.len() >= concurrent {
-            let mut output = self.port_range.ports.split_off(concurrent);
-            output.reverse();
-            self.port_range.ports.reverse();
-            output
-        } else {
-            vec![]
-        }
+        self.port_range.ports.pop_front()
     }
 }
 

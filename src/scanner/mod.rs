@@ -1,6 +1,6 @@
 pub mod host_info;
-use crate::{exit, parse_arg::CliArgs, port_descriptions::PortDescriptions};
-use async_channel::Sender;
+use crate::{parse_arg::CliArgs, port_descriptions::PortDescriptions};
+use futures::StreamExt;
 use std::{collections::HashSet, future::Future, net::IpAddr, pin::Pin};
 use tokio::net::TcpStream;
 
@@ -67,6 +67,13 @@ impl AllPortStatus {
         self.open_len() + self.closed == self.number_ports
     }
 
+    /// When using iter streams, can get the data as a single vec, so insert all at once
+    fn insert_bulk(&mut self, data: Vec<PortMessage>) {
+        for i in data {
+            self.insert(i);
+        }
+    }
+
     /// Insert new port details, if true store port, if false just increase a counter
     fn insert(&mut self, message: PortMessage) {
         if message.open {
@@ -82,10 +89,9 @@ impl AllPortStatus {
         counter: u8,
         ip: IpAddr,
         port: u16,
-        sx: Sender<PortMessage>,
         timeout: u32,
         verbose: Option<u8>,
-    ) -> Pin<Box<dyn Future<Output = ()> + Send>> {
+    ) -> Pin<Box<dyn Future<Output = PortMessage> + Send>> {
         let now = std::time::Instant::now();
 
         // Print some information when in verbose mode
@@ -110,40 +116,28 @@ impl AllPortStatus {
                 verbose_print_open(true);
                 // Should one try to actually write to the port?
                 // let open = stream.try_write(&[0]).is_ok();
-                if sx.send(PortMessage { port, open: true }).await.is_err() {
-                    exit(1);
-                }
+                PortMessage { port, open: true }
             } else {
                 verbose_print_open(false);
                 if counter > 0 {
-                    Self::scan_port(counter - 1, ip, port, sx, timeout, verbose).await;
-                } else if sx.send(PortMessage { port, open: false }).await.is_err() {
-                    exit(1);
+                    Self::scan_port(counter - 1, ip, port, timeout, verbose).await
+                } else {
+                    PortMessage { port, open: false }
                 }
             }
         })
-    }
-
-    /// Spawn a port scan into its own thread
-    fn spawn_scan_port(
-        counter: u8,
-        ip: IpAddr,
-        port: u16,
-        sx: Sender<PortMessage>,
-        timeout: u32,
-        verbose: Option<u8>,
-    ) {
-        tokio::spawn(Self::scan_port(counter, ip, port, sx, timeout, verbose));
     }
 
     /// Scan the entire range of selected ports by initiating multiple concurrent requests simultaneously
     async fn first_pass(cli_args: &mut CliArgs, ip: &IpAddr) -> Self {
         let mut first_pass = Self::new(cli_args);
         let counter = cli_args.retry;
+        let concurrent = usize::from(cli_args.concurrent);
 
-        let (sx, rx) = async_channel::bounded(usize::from(cli_args.concurrent));
-
-        let mut to_spawn = cli_args.ports_split();
+        let mut ports = Vec::with_capacity(usize::from(cli_args.ports_len()));
+        while let Some(port) = cli_args.ports_pop() {
+            ports.push(port);
+        }
 
         let verbose = if cli_args.verbose.is_some() {
             Some(counter)
@@ -151,29 +145,22 @@ impl AllPortStatus {
             None
         };
 
-        while let Some(port) = cli_args.ports_pop() {
-            Self::spawn_scan_port(counter, *ip, port, sx.clone(), cli_args.timeout, verbose);
-        }
+        let port_responses = futures::stream::iter(
+            ports
+                .into_iter()
+                .map(|port| Self::scan_port(counter, *ip, port, cli_args.timeout, verbose)),
+        )
+        .buffer_unordered(concurrent)
+        .collect::<Vec<_>>()
+        .await;
 
-        while let Ok(message) = rx.recv().await {
-            first_pass.insert(message);
-
-            // Need to manually close the receiver here, as we don't drop sx, and its being continually cloned
-            if first_pass.complete() {
-                rx.close();
-            }
-
-            if let Some(port) = to_spawn.pop() {
-                Self::spawn_scan_port(counter, *ip, port, sx.clone(), cli_args.timeout, verbose);
-            }
-        }
+        first_pass.insert_bulk(port_responses);
         first_pass
     }
 
     /// Verify the discovered open ports through sequential scans instead of concurrent spawning.
     async fn second_pass(first_pass: Self, cli_args: CliArgs, ip: &IpAddr) -> Self {
         let mut validated_result = Self::from(&first_pass);
-        let (sx, rx) = async_channel::bounded(first_pass.open.len());
         let verbose = if cli_args.verbose.is_some() {
             Some(cli_args.retry)
         } else {
@@ -181,18 +168,8 @@ impl AllPortStatus {
         };
 
         for port in &first_pass.open {
-            Self::scan_port(
-                cli_args.retry,
-                *ip,
-                *port,
-                sx.clone(),
-                cli_args.timeout,
-                verbose,
-            )
-            .await;
-        }
-        drop(sx);
-        while let Ok(message) = rx.recv().await {
+            let message =
+                Self::scan_port(cli_args.retry, *ip, *port, cli_args.timeout, verbose).await;
             validated_result.insert(message);
         }
         validated_result
@@ -448,5 +425,3 @@ mod tests {
         assert!(result.contains(&(80, "http")));
     }
 }
-
-// TODO test ports_split, is order, and split correctly, use a 100 spit 10, 100 spit 1, and 1000 split 10
