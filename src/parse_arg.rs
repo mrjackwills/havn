@@ -74,6 +74,8 @@ impl From<&Cli> for PortRange {
                 .map_or((1, PORT_UPPER_DEFAULT), |i| (i, i))
         };
 
+        let start = start.max(1);
+        let end = end.max(1);
         Self {
             start,
             end,
@@ -205,6 +207,8 @@ mod tests {
     #[test]
     /// Test that ports are parsed correctly, everything else should be handled by Clap directly
     fn test_cli_port_range() {
+        test("0-1000", 1, 1000, 1000);
+        test("0", 1, 1, 1);
         test("1-1000", 1, 1000, 1000);
         test("1000-1", 1, 1000, 1000);
         test("100-200", 100, 200, 101);
